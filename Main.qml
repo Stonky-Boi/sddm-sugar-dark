@@ -8,8 +8,10 @@ Pane {
     height: config.ScreenHeight || Screen.height
     width: config.ScreenWidth || Screen.width
 
+    // Load Custom Font
     FontLoader { id: terminalFont; source: "Assets/Fonts/ShareTechMono-Regular.ttf" }
 
+    // Force global white text
     palette.text: "white"
     palette.buttonText: "white"
     palette.window: "transparent"
@@ -33,37 +35,13 @@ Pane {
         anchors.bottom: parent.bottom
         anchors.leftMargin: config.ScreenPadding
         
-        // --- CHANGE HERE: Increased top margin to clear the logo ---
+        // This margin pushes the Login Form down to clear the logo in your wallpaper
         anchors.topMargin: 250 
         
         spacing: 10
         width: parent.width * 0.45
 
-        // Header
-        Text {
-            text: "W E Y L A N D  -  Y U T A N I"
-            color: "white"
-            font.family: terminalFont.name
-            font.bold: true
-            font.pointSize: 28
-            font.letterSpacing: 2
-        }
-        Text {
-            text: "PERSONAL-TERMINAL-ACCESS-INTERFACE"
-            color: "white"
-            font.family: terminalFont.name
-            font.bold: true
-            font.pointSize: 18
-            opacity: 0.8
-        }
-        Text {
-            text: "**********************************************"
-            color: "white"
-            font.family: terminalFont.name
-            font.bold: true
-        }
-        
-        Item { height: 20; width: 1 } 
+        // [REMOVED HEADER TEXT BLOCKS HERE]
 
         // LOGIN FORM
         LoginForm {
@@ -76,18 +54,23 @@ Pane {
         Column {
             spacing: 5
             Layout.topMargin: 0
+            
             Text { text: "[ACCESSING PTAI SYSTEM...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: "[LOADING USER PROFILE...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: "[AUTHENTICATION STANDBY]"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
+            
             Item { height: 15; width: 1 }
+
             Text { text: "[INITIALIZING DATA ACCESS...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: "[RETRIEVING INFORMATION...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
+            
             Item { height: 15; width: 1 }
+
             Text { text: ">CMD:/access quick"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: ">[DISPLAYING LOCAL QUICK ACCESS://]"; color: "white"; font.family: terminalFont.name; font.bold: true }
         }
         
-        Item { Layout.fillHeight: true }
+        Item { Layout.fillHeight: true } // Push Power Buttons to bottom
 
         // POWER CONTROLS
         SystemButtons {
