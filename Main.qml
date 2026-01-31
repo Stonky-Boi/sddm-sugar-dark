@@ -34,9 +34,7 @@ Pane {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.leftMargin: config.ScreenPadding
-        
-        // This margin pushes the Login Form down to clear the logo in your wallpaper
-        anchors.topMargin: 250 
+        anchors.topMargin: config.ScreenPadding
         
         spacing: 10
         width: parent.width * 0.45
