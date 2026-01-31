@@ -1,6 +1,5 @@
 import QtQuick 2.0
 
-// Safe Placeholder - prevents "InputPanel unavailable" crashes
 Item {
     id: root
     visible: active
@@ -25,6 +24,7 @@ Item {
             Text {
                 text: "VIRTUAL_INPUT_DEVICE"
                 color: "#33ff00"
+                // Direct reference to root property
                 font.family: root.fontFamily
                 font.bold: true
                 font.pointSize: 20

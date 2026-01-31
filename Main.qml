@@ -68,7 +68,7 @@ Pane {
             Layout.bottomMargin: 50 
             visible: true
             
-            // --- CRITICAL FIX: Pass the font family explicitly ---
+            // Explicitly pass the font name
             fontFamily: terminalFont.name
         }
     }
@@ -262,7 +262,6 @@ Pane {
         property bool active: item ? item.active : false
         anchors.fill: parent
         
-        // --- CRITICAL FIX: Pass font family to keyboard loader items ---
         property string fontFamily: terminalFont.name
         onLoaded: item.fontFamily = terminalFont.name
 

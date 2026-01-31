@@ -3,6 +3,7 @@ import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.4
 
 RowLayout {
+    id: root // ID added for direct access
     spacing: 30
     Layout.alignment: Qt.AlignLeft
     z: 100 
@@ -10,8 +11,6 @@ RowLayout {
     // Receive Font from Main.qml
     property string fontFamily: "Monospace"
 
-    // Define buttons: [Text, ActionIndex]
-    // 0=Suspend, 1=Hibernate, 2=Reboot, 3=Shutdown
     property var buttons: [
         ["[ SUSPEND ]", 0],
         ["[ HIBERNATE ]", 1],
@@ -32,8 +31,8 @@ RowLayout {
             
             contentItem: Text {
                 text: parent.text
-                // USE THE PASSED FONT PROPERTY
-                font.family: parent.parent.parent.fontFamily 
+                // DIRECT ID REFERENCE (Fixes the undefined error)
+                font.family: root.fontFamily 
                 font.pointSize: 16 * 0.9 
                 font.bold: true 
                 color: btn.hovered ? "#33ff00" : "white"
