@@ -25,7 +25,7 @@ Pane {
         z: 0
     }
 
-    // --- LEFT COLUMN (LOCKED & PRESERVED) ---
+    // --- LEFT COLUMN ---
     ColumnLayout {
         id: leftPanel
         anchors.left: parent.left
@@ -69,17 +69,14 @@ Pane {
         }
     }
 
-    // --- RIGHT COLUMN (MOVED UP) ---
+    // --- RIGHT COLUMN ---
     ColumnLayout {
         id: rightPanel
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.rightMargin: 50
-        
-        // --- CHANGE 1: Moved UP to 50 to align Clock with Logo ---
         anchors.topMargin: 50 
-        
         width: parent.width * 0.4
         spacing: 40
 
@@ -135,11 +132,13 @@ Pane {
                 Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.top: parent.top; anchors.right: parent.right }
                 Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.bottom: parent.bottom; anchors.left: parent.left }
                 Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.bottom: parent.bottom; anchors.right: parent.right }
+
                 Image {
                     anchors.fill: parent; anchors.margins: 5
                     source: userModel.lastUser ? Qt.resolvedUrl(userModel.lastUser) : ""
                     fillMode: Image.PreserveAspectCrop
                 }
+                
                 Column {
                     anchors.fill: parent
                     Repeater {
@@ -187,16 +186,45 @@ Pane {
         Item { Layout.fillHeight: true }
     }
 
+    // --- FOOTER (Pinned) ---
     Text {
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        
         anchors.bottomMargin: 50
-        
         text: "(C) SM-LINK DATA SYSTEMS"
         color: "white"
         font.family: terminalFont.name
         font.bold: true
         opacity: 0.8
+    }
+
+    // --- VIRTUAL KEYBOARD LOADER ---
+    Loader {
+        id: virtualKeyboard
+        source: "Components/VirtualKeyboard.qml"
+        state: "hidden"
+        z: 200 // Ensure it's on top
+        
+        property bool active: item ? item.active : false
+        
+        // Push the keyboard up from bottom
+        anchors.fill: parent
+        
+        states: [
+            State {
+                name: "visible"
+                when: virtualKeyboard.active
+                PropertyChanges { target: virtualKeyboard; opacity: 1 }
+            },
+            State {
+                name: "hidden"
+                when: !virtualKeyboard.active
+                PropertyChanges { target: virtualKeyboard; opacity: 0 }
+            }
+        ]
+        
+        transitions: Transition {
+            NumberAnimation { property: "opacity"; duration: 200 }
+        }
     }
 }
