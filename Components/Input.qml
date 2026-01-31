@@ -7,20 +7,19 @@ Column {
     Layout.fillWidth: true
     spacing: 15
 
-    property Control exposeLogin: loginButton
+    property Item exposeLogin: loginButton
     property bool failed
     property alias sessionName: sessionSelect.currentSessionName
+    property var soundEffect
 
-    // --- CURSOR COMPONENT ---
+    // --- CUSTOM CURSOR ---
     Component {
         id: blockCursor
         Rectangle {
-            width: 10 // Block width
+            width: 12
             height: parent.height
-            color: "#33ff00" // Green cursor
+            color: "#33ff00"
             visible: parent.activeFocus
-            
-            // Blinking Animation
             SequentialAnimation on opacity {
                 loops: Animation.Infinite
                 NumberAnimation { to: 0; duration: 500 }
@@ -31,46 +30,26 @@ Column {
 
     // --- USERNAME ---
     RowLayout {
-        spacing: 0 
-        Layout.fillWidth: true
-        z: 200 
-        
-        Text {
-            text: "LOGIN:   "
-            color: "white"; font.family: root.font.family; font.pointSize: root.font.pointSize; font.bold: true
-            Layout.rightMargin: 10
-        }
+        spacing: 0; Layout.fillWidth: true; z: 200 
+        Text { text: "LOGIN:   "; color: "white"; font.family: root.font.family; font.pointSize: root.font.pointSize; font.bold: true; Layout.rightMargin: 10 }
         Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
         
         ComboBox {
             id: username
-            Layout.preferredWidth: 250
-            Layout.fillWidth: false
+            Layout.preferredWidth: 250; Layout.fillWidth: false
             model: userModel
             textRole: "name"
             currentIndex: model.lastIndex
             background: Rectangle { color: "transparent" }
-            contentItem: Text {
-                text: parent.currentText
-                color: "white"
-                font.family: root.font.family; font.pointSize: root.font.pointSize; font.bold: true
-                verticalAlignment: Text.AlignVCenter
-            }
+            contentItem: Text { text: parent.currentText; color: "white"; font.family: root.font.family; font.pointSize: root.font.pointSize; font.bold: true; verticalAlignment: Text.AlignVCenter }
             popup: Popup {
                 y: parent.height; width: parent.width; implicitHeight: contentItem.implicitHeight; padding: 1
-                contentItem: ListView {
-                    clip: true; implicitHeight: contentHeight
-                    model: username.popup.visible ? username.delegateModel : null
-                    currentIndex: username.highlightedIndex
-                }
+                contentItem: ListView { clip: true; implicitHeight: contentHeight; model: username.popup.visible ? username.delegateModel : null; currentIndex: username.highlightedIndex }
                 background: Rectangle { color: "black"; border.color: "white"; border.width: 1 }
             }
             delegate: ItemDelegate {
                 width: parent.width
-                contentItem: Text {
-                    text: model.name; color: hovered ? "black" : "white"
-                    font.family: root.font.family; font.bold: true
-                }
+                contentItem: Text { text: model.name; color: hovered ? "black" : "white"; font.family: root.font.family; font.bold: true }
                 background: Rectangle { color: hovered ? "#33ff00" : "black" }
             }
         }
@@ -79,21 +58,13 @@ Column {
 
     // --- PASSWORD ---
     RowLayout {
-        spacing: 0
-        Layout.fillWidth: true
-        z: 100
-        
-        Text {
-            text: "PASSWORD:"
-            color: "white"; font.family: root.font.family; font.pointSize: root.font.pointSize; font.bold: true
-            Layout.rightMargin: 10
-        }
+        spacing: 0; Layout.fillWidth: true; z: 100
+        Text { text: "PASSWORD:"; color: "white"; font.family: root.font.family; font.pointSize: root.font.pointSize; font.bold: true; Layout.rightMargin: 10 }
         Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
         
         TextField {
             id: password
-            Layout.preferredWidth: 250
-            Layout.fillWidth: false
+            Layout.preferredWidth: 250; Layout.fillWidth: false
             focus: config.ForcePasswordFocus == "true"
             echoMode: revealSecret.checked ? TextInput.Normal : TextInput.Password
             passwordCharacter: "*"
@@ -102,12 +73,11 @@ Column {
             horizontalAlignment: TextInput.AlignLeft
             background: Rectangle { color: "transparent" }
             
-            // APPLYING THE CUSTOM CURSOR
             cursorDelegate: blockCursor
             
-            // Playing sound on key press (Basic implementation)
+            // PLAY SOUND ON TYPING
             onTextEdited: {
-                if(root.soundKeypress) root.soundKeypress.play()
+                if(inputContainer.soundEffect) inputContainer.soundEffect.play()
             }
 
             Keys.onReturnPressed: loginButton.clicked()
@@ -121,11 +91,7 @@ Column {
         CheckBox {
             id: revealSecret
             hoverEnabled: true
-            indicator: Text {
-                text: parent.checked ? "[X] SHOW" : "[ ] SHOW"
-                font.family: root.font.family; font.pointSize: root.font.pointSize * 0.8; font.bold: true
-                color: parent.hovered ? "#33ff00" : "white" 
-            }
+            indicator: Text { text: parent.checked ? "[X] SHOW" : "[ ] SHOW"; font.family: root.font.family; font.pointSize: root.font.pointSize * 0.8; font.bold: true; color: parent.hovered ? "#33ff00" : "white" }
             contentItem: Item {} 
         }
     }
@@ -136,11 +102,7 @@ Column {
             text: "[ KEYBOARD ]"
             hoverEnabled: true; visible: true
             background: Rectangle { color: "transparent" }
-            contentItem: Text {
-                text: parent.text
-                font.family: root.font.family; font.pointSize: root.font.pointSize * 0.8; font.bold: true
-                color: parent.hovered ? "#33ff00" : "white"
-            }
+            contentItem: Text { text: parent.text; font.family: root.font.family; font.pointSize: root.font.pointSize * 0.8; font.bold: true; color: parent.hovered ? "#33ff00" : "white" }
             onClicked: virtualKeyboard.active = !virtualKeyboard.active
         }
     }

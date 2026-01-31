@@ -1,7 +1,7 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.4
-import QtMultimedia 5.8
+import QtMultimedia 5.8 
 import "Components"
 
 Pane {
@@ -18,9 +18,12 @@ Pane {
     font.family: terminalFont.name
     font.pointSize: config.FontSize
 
-    // --- AUDIO SYSTEM ---
-    SoundEffect { id: soundKeypress; source: "Assets/Sounds/keypress.wav"; volume: 0.3 }
-    
+    // --- AUDIO SYSTEM (MP3) ---
+    // Note: If MP3s fail to play in the login screen, convert them to WAV.
+    SoundEffect { id: soundKeypress; source: "Assets/Sounds/keypress.mp3"; volume: 0.5 }
+    SoundEffect { id: soundAccessGranted; source: "Assets/Sounds/access_granted.mp3"; volume: 0.8 }
+    SoundEffect { id: soundAccessDenied; source: "Assets/Sounds/access_denied.mp3"; volume: 1.0 }
+
     Image {
         id: backgroundImage
         anchors.fill: parent
@@ -44,6 +47,8 @@ Pane {
             id: form
             Layout.fillWidth: true
             Layout.preferredHeight: 400
+            
+            // Pass audio signal down to inputs
             property var soundEffect: soundKeypress 
         }
 
@@ -74,7 +79,7 @@ Pane {
         }
     }
 
-    // --- RIGHT COLUMN (NO OVERFLOW) ---
+    // --- RIGHT COLUMN ---
     ColumnLayout {
         id: rightPanel
         anchors.right: parent.right
@@ -159,7 +164,11 @@ Pane {
             RowLayout {
                 spacing: 10
                 Text { text: "INPUT_NODE:"; color: "white"; font.family: terminalFont.name; font.bold: true }
-                Text { text: keyboard.layouts ? "[" + keyboard.layouts[keyboard.currentLayout].toUpperCase() + "]" : "[STD_INPUT]"; color: "white"; font.family: terminalFont.name; font.bold: true }
+                // SAFE CHECK ADDED HERE TO PREVENT CRASH
+                Text { 
+                    text: keyboard.layouts && keyboard.layouts.length > 0 ? "[" + keyboard.layouts[keyboard.currentLayout].toString().toUpperCase() + "]" : "[STD_INPUT]"
+                    color: "white"; font.family: terminalFont.name; font.bold: true 
+                }
             }
             RowLayout {
                 spacing: 10

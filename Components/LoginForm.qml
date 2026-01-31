@@ -6,9 +6,8 @@ ColumnLayout {
     id: formContainer
     SDDM.TextConstants { id: textConstants }
 
-    property int p: config.ScreenPadding
-    property string a: config.FormPosition
     property bool virtualKeyboardActive
+    property var soundEffect
     property alias currentSessionName: input.sessionName
 
     Input {
@@ -16,5 +15,8 @@ ColumnLayout {
         Layout.alignment: Qt.AlignLeft
         Layout.preferredWidth: parent.width
         Layout.preferredHeight: root.height / 10
+        
+        // Pass the sound effect down
+        soundEffect: formContainer.soundEffect
     }
 }
