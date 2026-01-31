@@ -34,12 +34,12 @@ Pane {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.leftMargin: config.ScreenPadding
-        anchors.topMargin: 200
+        
+        // --- CHANGE 1: Reduced margin to 150 to pull Login UP closer to Logo ---
+        anchors.topMargin: 150 
         
         spacing: 10
         width: parent.width * 0.45
-
-        // [REMOVED HEADER TEXT BLOCKS HERE]
 
         // LOGIN FORM
         LoginForm {
@@ -48,10 +48,12 @@ Pane {
             Layout.preferredHeight: 250
         }
 
-        // LORE TEXT
+        // --- CHANGE 2: Big Spacer to separate Login from Bottom Text ---
+        Item { height: 80; width: 1 } 
+
+        // LORE TEXT (Fake Terminal Logs)
         Column {
             spacing: 5
-            Layout.topMargin: 0
             
             Text { text: "[ACCESSING PTAI SYSTEM...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: "[LOADING USER PROFILE...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
