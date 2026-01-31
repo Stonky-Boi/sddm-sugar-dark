@@ -4,13 +4,12 @@ import QtGraphicalEffects 1.0
 
 Item {
     id: sessionButton
-    
-    // --- RECEIVE PROPERTIES ---
-    property string fontFamily: "Monospace"
-    property real fontSize: 16
-
-    height: fontSize
+    height: root.font.pointSize
+    // Use implicit width so Layouts know how big we are
     width: childrenRect.width 
+    
+    // REMOVED: anchors.horizontalCenter: parent.horizontalCenter
+    // This allows Input.qml to align it to the left (under the [ brackets)
 
     property var selectedSession: selectSession.currentIndex
     property string textConstantSession
@@ -29,11 +28,11 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             contentItem: Text {
                 text: model.name
-                font.pointSize: sessionButton.fontSize * 0.8
+                font.pointSize: root.font.pointSize * 0.8
                 color: selectSession.highlightedIndex === index ? "black" : "white"
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
-                font.family: sessionButton.fontFamily
+                font.family: root.font.family
                 font.bold: true
             }
             highlighted: parent.highlightedIndex === index
@@ -46,12 +45,14 @@ Item {
 
         contentItem: Text {
             id: displayedItem
+            // Text Format: [ SESSION: PLASMA ]
             text: "[ SESSION: " + (selectSession.currentText ? selectSession.currentText.toUpperCase() : "DEFAULT") + " ]"
+            
             color: parent.hovered ? "#33ff00" : "white"
             verticalAlignment: Text.AlignVCenter
             anchors.left: parent.left
-            font.pointSize: sessionButton.fontSize * 0.8
-            font.family: sessionButton.fontFamily
+            font.pointSize: root.font.pointSize * 0.8
+            font.family: root.font.family
             font.bold: true
         }
 
