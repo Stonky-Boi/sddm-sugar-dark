@@ -25,7 +25,7 @@ Pane {
         z: 0
     }
 
-    // --- LEFT COLUMN (LOCKED) ---
+    // --- LEFT COLUMN ---
     ColumnLayout {
         id: leftPanel
         anchors.left: parent.left
@@ -40,6 +40,8 @@ Pane {
             id: form
             Layout.fillWidth: true
             Layout.preferredHeight: 400
+            // --- CRITICAL FIX: Pass the keyboard object down ---
+            keyboard: virtualKeyboard 
         }
 
         Item { height: 30; width: 1 } 
@@ -69,7 +71,7 @@ Pane {
         }
     }
 
-    // --- RIGHT COLUMN (LIVE STATUS) ---
+    // --- RIGHT COLUMN ---
     ColumnLayout {
         id: rightPanel
         anchors.right: parent.right
@@ -98,7 +100,7 @@ Pane {
             }
         }
 
-        // 2. REACTOR STATUS (Live Voltage Fluctuation)
+        // 2. REACTOR STATUS
         Column {
             spacing: 5
             Layout.alignment: Qt.AlignLeft
@@ -111,15 +113,11 @@ Pane {
                     Rectangle {
                         width: 15; height: 25
                         property bool active: index < 18
-                        
-                        // Voltage Flicker Animation
                         color: active ? "white" : "#444"
-                        opacity: active ? (0.8 + Math.random()*0.2) : 1 // Flicker effect
-                        
+                        opacity: active ? (0.8 + Math.random()*0.2) : 1 
                         Timer {
                             interval: 100 + Math.random() * 500
-                            running: true
-                            repeat: true
+                            running: true; repeat: true
                             onTriggered: parent.opacity = parent.active ? (0.8 + Math.random()*0.2) : 1
                         }
                     }
@@ -129,14 +127,14 @@ Pane {
                 spacing: 10
                 Text { text: "OUTPUT: NOMINAL"; color: "white"; font.family: terminalFont.name; font.bold: true }
                 Text { 
-                    text: "[ " + (100 + Math.floor(Math.random() * 3)) + "% ]" // 100-102%
+                    text: "[ " + (100 + Math.floor(Math.random() * 3)) + "% ]" 
                     color: "#33ff00"; font.family: terminalFont.name; font.bold: true
                     Timer { interval: 800; running: true; repeat: true; onTriggered: parent.text = "[ " + (100 + Math.floor(Math.random() * 3)) + "% ]" }
                 }
             }
         }
 
-        // 3. COMMS UPLINK (Signal Noise)
+        // 3. COMMS UPLINK
         Column {
             spacing: 5
             Layout.alignment: Qt.AlignLeft
@@ -147,14 +145,14 @@ Pane {
                 spacing: 10
                 Text { text: "SIGNAL_STRENGTH:"; color: "white"; font.family: terminalFont.name; font.bold: true }
                 Text { 
-                    text: "|||||||||||| [ -" + (32 + Math.floor(Math.random() * 4)) + "dBm ]" // -32 to -36 dBm
+                    text: "|||||||||||| [ -" + (32 + Math.floor(Math.random() * 4)) + "dBm ]" 
                     color: "#33ff00"; font.family: terminalFont.name; font.bold: true 
                     Timer { interval: 1500; running: true; repeat: true; onTriggered: parent.text = "|||||||||||| [ -" + (32 + Math.floor(Math.random() * 4)) + "dBm ]" }
                 }
             }
         }
 
-        // 4. MEMORY BANK (Simulated Allocation)
+        // 4. MEMORY BANK
         Column {
             spacing: 5
             Layout.alignment: Qt.AlignLeft
@@ -162,16 +160,13 @@ Pane {
             
             RowLayout {
                 spacing: 5
-                // Bank 01
                 Rectangle {
                     width: 150; height: 15
                     color: "#222"; border.color: "white"; border.width: 1
                     Rectangle {
                         height: parent.height - 4; x: 2; y: 2
                         color: "white"
-                        width: parent.width * 0.4 // Base usage
-                        
-                        // Memory "Breathing" Animation
+                        width: parent.width * 0.4 
                         SequentialAnimation on width {
                             loops: Animation.Infinite
                             NumberAnimation { to: 100; duration: 2000; easing.type: Easing.InOutQuad }
@@ -183,7 +178,7 @@ Pane {
             }
         }
 
-        // 5. STORAGE STATUS (Simulated I/O)
+        // 5. STORAGE STATUS
         Column {
             spacing: 5
             Layout.alignment: Qt.AlignLeft
@@ -204,12 +199,12 @@ Pane {
                     color: parent.blink ? "red" : "#222"
                     font.family: terminalFont.name; font.bold: true
                     property bool blink: false
-                    Timer { interval: 100; running: true; repeat: true; onTriggered: parent.blink = Math.random() > 0.9 } // Writes represent rare events
+                    Timer { interval: 100; running: true; repeat: true; onTriggered: parent.blink = Math.random() > 0.9 } 
                 }
             }
         }
 
-        // 6. SYSTEM STATUS ARRAY
+        // 6. SYSTEM STATUS
         Column {
             spacing: 15
             Layout.alignment: Qt.AlignLeft
@@ -228,7 +223,6 @@ Pane {
             RowLayout {
                 spacing: 10
                 Text { text: "INPUT_NODE:"; color: "white"; font.family: terminalFont.name; font.bold: true }
-                // SAFE CHECK
                 Text { 
                     text: keyboard.layouts && keyboard.layouts.length > 0 ? "[" + keyboard.layouts[keyboard.currentLayout].toString().toUpperCase() + "]" : "[STD_INPUT]"
                     color: "white"; font.family: terminalFont.name; font.bold: true 

@@ -10,6 +10,9 @@ Column {
     property Item exposeLogin: loginButton
     property bool failed
     property alias sessionName: sessionSelect.currentSessionName
+    
+    // --- CRITICAL FIX: Receive the keyboard object ---
+    property var keyboard
 
     // --- CUSTOM CURSOR ---
     Component {
@@ -96,7 +99,12 @@ Column {
             hoverEnabled: true; visible: true
             background: Rectangle { color: "transparent" }
             contentItem: Text { text: parent.text; font.family: root.font.family; font.pointSize: root.font.pointSize * 0.8; font.bold: true; color: parent.hovered ? "#33ff00" : "white" }
-            onClicked: virtualKeyboard.active = !virtualKeyboard.active
+            
+            // --- CRITICAL FIX: Use the keyboard object ---
+            onClicked: {
+                if(inputContainer.keyboard) 
+                    inputContainer.keyboard.active = !inputContainer.keyboard.active
+            }
         }
     }
 

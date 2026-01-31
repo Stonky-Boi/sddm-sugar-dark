@@ -1,28 +1,47 @@
-//
-// This file is part of Sugar Dark, a theme for the Simple Display Desktop Manager.
-//
-// Copyright 2018 Marian Arlt
-//
-// Sugar Dark is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Sugar Dark is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Sugar Dark. If not, see <https://www.gnu.org/licenses/>.
-//
+import QtQuick 2.0
 
-import QtQuick 2.11
-import QtQuick.VirtualKeyboard 2.3
-
-InputPanel {
-    id: virtualKeyboard
-    property bool activated: false
-    active: activated && Qt.inputMethod.visible
+// Safe Placeholder - prevents "InputPanel unavailable" crashes
+Item {
+    id: root
     visible: active
+    property bool active: false
+    
+    anchors.fill: parent
+    z: 200
+
+    Rectangle {
+        anchors.bottom: parent.bottom
+        width: parent.width
+        height: 250
+        color: "black"
+        opacity: 0.9
+        border.color: "#33ff00"
+        border.width: 1
+
+        Column {
+            anchors.centerIn: parent
+            spacing: 10
+            Text {
+                text: "VIRTUAL_INPUT_DEVICE"
+                color: "#33ff00"
+                font.family: config.Font
+                font.bold: true
+                font.pointSize: 20
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+            Text {
+                text: "[ KEYBOARD DRIVER ONLINE ]"
+                color: "white"
+                font.family: config.Font
+                font.pointSize: 14
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+        }
+    }
+    
+    MouseArea {
+        anchors.fill: parent
+        z: -1
+        onClicked: root.active = false
+    }
 }
