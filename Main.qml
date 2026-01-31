@@ -34,8 +34,7 @@ Pane {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         
-        // --- CHANGE: Increased Left Margin to 150 to align with Logo ---
-        anchors.leftMargin: 150
+        anchors.leftMargin: 50
         
         // Top Margin to clear the vertical space of the logo
         anchors.topMargin: 150 
