@@ -17,13 +17,15 @@ Column {
 
         Text {
             text: "LOGIN:   "
-            color: root.palette.text
+            // Force bright green
+            color: "#55ff55" 
             font.family: root.font.family
             font.pointSize: root.font.pointSize
+            font.bold: true
+            style: Text.Outline; styleColor: "black"
         }
 
-        // We wrap the User Input in brackets [ ] visually
-        Text { text: "["; color: root.palette.text; font.pointSize: root.font.pointSize }
+        Text { text: "["; color: "#55ff55"; font.pointSize: root.font.pointSize; font.bold: true }
 
         TextField {
             id: username
@@ -32,19 +34,21 @@ Column {
             font.capitalization: Font.Capitalize
             font.family: root.font.family
             font.pointSize: root.font.pointSize
-            color: root.palette.highlight
+            font.bold: true
+            
+            // Text color inside the box (Input text should be White for max readability)
+            color: "white" 
             
             placeholderText: "IDENTITY"
             horizontalAlignment: TextInput.AlignLeft
             
-            // Remove standard white box, make it transparent
             background: Rectangle { color: "transparent" }
 
             Keys.onReturnPressed: loginButton.clicked()
             KeyNavigation.down: password
         }
 
-        Text { text: "]"; color: root.palette.text; font.pointSize: root.font.pointSize }
+        Text { text: "]"; color: "#55ff55"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
     // --- PASSWORD ---
@@ -54,12 +58,14 @@ Column {
 
         Text {
             text: "PASSWORD:"
-            color: root.palette.text
+            color: "#55ff55"
             font.family: root.font.family
             font.pointSize: root.font.pointSize
+            font.bold: true
+            style: Text.Outline; styleColor: "black"
         }
 
-        Text { text: "["; color: root.palette.text; font.pointSize: root.font.pointSize }
+        Text { text: "["; color: "#55ff55"; font.pointSize: root.font.pointSize; font.bold: true }
 
         TextField {
             id: password
@@ -69,7 +75,10 @@ Column {
             passwordCharacter: "*"
             font.family: root.font.family
             font.pointSize: root.font.pointSize
-            color: root.palette.highlight
+            font.bold: true
+            
+            // Password dots should be white
+            color: "white"
             
             horizontalAlignment: TextInput.AlignLeft
             background: Rectangle { color: "transparent" }
@@ -77,28 +86,28 @@ Column {
             Keys.onReturnPressed: loginButton.clicked()
         }
 
-        Text { text: "]"; color: root.palette.text; font.pointSize: root.font.pointSize }
+        Text { text: "]"; color: "#55ff55"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
     // --- ERROR MESSAGE ---
     Text {
         id: errorMessage
         text: failed ? config.TranslateLoginFailedWarning : ""
-        color: "red" // Red alert for errors
+        color: "#ff3333" // Bright Red
         font.family: root.font.family
         font.bold: true
+        font.pointSize: 16
+        style: Text.Outline; styleColor: "black"
         visible: failed
     }
 
-    // --- HIDDEN BUT NECESSARY BUTTON ---
-    // SDDM needs a button to trigger the login signal
     Button {
         id: loginButton
         visible: false
         onClicked: sddm.login(username.text, password.text, sessionSelect.selectedSession)
     }
 
-    // --- SESSION SELECT (Text Only) ---
+    // --- SESSION SELECT ---
     SessionButton {
         id: sessionSelect
         textConstantSession: textConstants.session

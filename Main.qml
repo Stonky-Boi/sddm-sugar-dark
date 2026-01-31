@@ -48,12 +48,14 @@ Pane {
             font.bold: true
             font.pointSize: 24
             lineHeight: 1.2
+            style: Text.Outline; styleColor: "black"
         }
 
         Text {
             text: "**********************************************"
             color: config.MainColor
             font.family: terminalFont.name
+            style: Text.Outline; styleColor: "black"
         }
 
         // Login Form (Username/Pass)
@@ -66,15 +68,14 @@ Pane {
         // Fake Terminal Boot Sequence
         Column {
             spacing: 5
-            opacity: 0.8
-            Text { text: "[ACCESSING PTAI SYSTEM...]"; color: config.MainColor; font.family: terminalFont.name }
-            Text { text: "[LOADING USER PROFILE...]"; color: config.MainColor; font.family: terminalFont.name }
-            Text { text: "[AUTHENTICATION REQUIRED]"; color: config.AccentColor; font.family: terminalFont.name }
+            Text { text: "[ACCESSING PTAI SYSTEM...]"; color: config.MainColor; font.family: terminalFont.name; font.bold: true; style: Text.Outline; styleColor: "black" }
+            Text { text: "[LOADING USER PROFILE...]"; color: config.MainColor; font.family: terminalFont.name; font.bold: true; style: Text.Outline; styleColor: "black" }
+            Text { text: "[AUTHENTICATION REQUIRED]"; color: config.AccentColor; font.family: terminalFont.name; font.bold: true; style: Text.Outline; styleColor: "black" }
             
             Item { height: 20; width: 1 } 
             
-            Text { text: ">CMD:/access quick"; color: config.MainColor; font.family: terminalFont.name; opacity: 0.7 }
-            Text { text: ">[DISPLAYING LOCAL QUICK ACCESS://]"; color: config.MainColor; font.family: terminalFont.name; opacity: 0.7 }
+            Text { text: ">CMD:/access quick"; color: config.MainColor; font.family: terminalFont.name; style: Text.Outline; styleColor: "black" }
+            Text { text: ">[DISPLAYING LOCAL QUICK ACCESS://]"; color: config.MainColor; font.family: terminalFont.name; style: Text.Outline; styleColor: "black" }
         }
         
         Item { Layout.fillHeight: true }
@@ -99,11 +100,13 @@ Pane {
                 color: config.AccentColor
                 font.family: terminalFont.name
                 font.bold: true
+                style: Text.Outline; styleColor: "black"
             }
             Text { 
                 text: "[00]D [00]H [00]M [19]S since last accident"
                 color: config.MainColor
                 font.family: terminalFont.name
+                style: Text.Outline; styleColor: "black"
             }
         }
 
@@ -114,11 +117,13 @@ Pane {
                 text: ">Remaining Work Time Till Yvaga III Vacation"
                 color: config.MainColor
                 font.family: terminalFont.name
+                style: Text.Outline; styleColor: "black"
             }
             Text { 
                 text: "[28489]D [21]H [5]M [5]S"
                 color: config.MainColor
                 font.family: terminalFont.name
+                style: Text.Outline; styleColor: "black"
             }
         }
 
@@ -133,6 +138,7 @@ Pane {
                 font.family: terminalFont.name
                 font.bold: true
                 font.pointSize: 18
+                style: Text.Outline; styleColor: "black"
             }
             Text { 
                 width: parent.parent.width
@@ -140,6 +146,7 @@ Pane {
                 text: "ORBITAL MINERAL HARVESTING OVER LV-410\nHALTED UNTIL FURTHER NOTICE DUE TO UNKNOWN\nDEBRIS FIELD NEAR OPERATION AREA."
                 color: config.MainColor
                 font.family: terminalFont.name
+                style: Text.Outline; styleColor: "black"
             }
             Text { 
                 width: parent.parent.width
@@ -147,6 +154,7 @@ Pane {
                 text: "THE SPREAD OF RUMORS OF ROGUE PERSONNEL ARE\nBASELESS."
                 color: config.MainColor
                 font.family: terminalFont.name
+                style: Text.Outline; styleColor: "black"
             }
             Text { 
                 width: parent.parent.width
@@ -154,6 +162,7 @@ Pane {
                 text: "AIR CURFEW IS IN EFFECT.\nHAULERS OVER 50000FT WILL BE TARGETED BY\nDEFENSE SYSTEMS."
                 color: config.MainColor
                 font.family: terminalFont.name
+                style: Text.Outline; styleColor: "black"
             }
         }
         
