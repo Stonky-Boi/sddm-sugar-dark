@@ -40,7 +40,12 @@ Pane {
             id: form
             Layout.fillWidth: true
             Layout.preferredHeight: 400
-            keyboard: virtualKeyboard 
+            
+            // --- EXPLICITLY PASS PROPERTIES ---
+            keyboard: virtualKeyboard
+            fontFamily: terminalFont.name
+            fontSize: config.FontSize
+            screenHeight: root.height 
         }
 
         Item { height: 30; width: 1 } 
@@ -67,8 +72,6 @@ Pane {
             Layout.fillWidth: true
             Layout.bottomMargin: 50 
             visible: true
-            
-            // Explicitly pass the font name
             fontFamily: terminalFont.name
         }
     }

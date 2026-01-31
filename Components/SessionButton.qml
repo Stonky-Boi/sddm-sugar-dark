@@ -4,7 +4,12 @@ import QtGraphicalEffects 1.0
 
 Item {
     id: sessionButton
-    height: config.FontSize
+    
+    // --- RECEIVE PROPERTIES ---
+    property string fontFamily: "Monospace"
+    property real fontSize: 16
+
+    height: fontSize
     width: childrenRect.width 
 
     property var selectedSession: selectSession.currentIndex
@@ -24,11 +29,11 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             contentItem: Text {
                 text: model.name
-                font.pointSize: config.FontSize * 0.8
+                font.pointSize: sessionButton.fontSize * 0.8
                 color: selectSession.highlightedIndex === index ? "black" : "white"
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
-                font.family: config.Font
+                font.family: sessionButton.fontFamily
                 font.bold: true
             }
             highlighted: parent.highlightedIndex === index
@@ -45,8 +50,8 @@ Item {
             color: parent.hovered ? "#33ff00" : "white"
             verticalAlignment: Text.AlignVCenter
             anchors.left: parent.left
-            font.pointSize: config.FontSize * 0.8
-            font.family: config.Font
+            font.pointSize: sessionButton.fontSize * 0.8
+            font.family: sessionButton.fontFamily
             font.bold: true
         }
 

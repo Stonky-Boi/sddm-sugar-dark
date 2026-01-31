@@ -11,6 +11,10 @@ Column {
     property bool failed
     property alias sessionName: sessionSelect.currentSessionName
     property var keyboard
+    
+    // --- RECEIVE PROPERTIES ---
+    property string fontFamily: "Monospace"
+    property real fontSize: 16
 
     // --- CUSTOM CURSOR ---
     Component {
@@ -33,12 +37,12 @@ Column {
         spacing: 0; Layout.fillWidth: true; z: 200 
         Text { 
             text: "LOGIN:   "; color: "white"; 
-            font.family: config.Font; font.pointSize: config.FontSize; font.bold: true; 
+            font.family: inputContainer.fontFamily; font.pointSize: inputContainer.fontSize; font.bold: true; 
             Layout.rightMargin: 10 
         }
         Text { 
             text: "["; color: "white"; 
-            font.pointSize: config.FontSize; font.bold: true 
+            font.pointSize: inputContainer.fontSize; font.bold: true 
         }
         
         ComboBox {
@@ -50,7 +54,7 @@ Column {
             background: Rectangle { color: "transparent" }
             contentItem: Text { 
                 text: parent.currentText; color: "white"; 
-                font.family: config.Font; font.pointSize: config.FontSize; font.bold: true; 
+                font.family: inputContainer.fontFamily; font.pointSize: inputContainer.fontSize; font.bold: true; 
                 verticalAlignment: Text.AlignVCenter 
             }
             popup: Popup {
@@ -62,14 +66,14 @@ Column {
                 width: parent.width
                 contentItem: Text { 
                     text: model.name; color: hovered ? "black" : "white"; 
-                    font.family: config.Font; font.bold: true 
+                    font.family: inputContainer.fontFamily; font.bold: true 
                 }
                 background: Rectangle { color: hovered ? "#33ff00" : "black" }
             }
         }
         Text { 
             text: "]"; color: "white"; 
-            font.pointSize: config.FontSize; font.bold: true 
+            font.pointSize: inputContainer.fontSize; font.bold: true 
         }
     }
 
@@ -78,12 +82,12 @@ Column {
         spacing: 0; Layout.fillWidth: true; z: 100
         Text { 
             text: "PASSWORD:"; color: "white"; 
-            font.family: config.Font; font.pointSize: config.FontSize; font.bold: true; 
+            font.family: inputContainer.fontFamily; font.pointSize: inputContainer.fontSize; font.bold: true; 
             Layout.rightMargin: 10 
         }
         Text { 
             text: "["; color: "white"; 
-            font.pointSize: config.FontSize; font.bold: true 
+            font.pointSize: inputContainer.fontSize; font.bold: true 
         }
         
         TextField {
@@ -92,7 +96,7 @@ Column {
             focus: config.ForcePasswordFocus == "true"
             echoMode: revealSecret.checked ? TextInput.Normal : TextInput.Password
             passwordCharacter: "*"
-            font.family: config.Font; font.pointSize: config.FontSize; font.bold: true
+            font.family: inputContainer.fontFamily; font.pointSize: inputContainer.fontSize; font.bold: true
             color: "white"
             horizontalAlignment: TextInput.AlignLeft
             background: Rectangle { color: "transparent" }
@@ -102,7 +106,7 @@ Column {
         }
         Text { 
             text: "]"; color: "white"; 
-            font.pointSize: config.FontSize; font.bold: true 
+            font.pointSize: inputContainer.fontSize; font.bold: true 
         }
     }
 
@@ -114,7 +118,7 @@ Column {
             hoverEnabled: true
             indicator: Text { 
                 text: parent.checked ? "[X] SHOW" : "[ ] SHOW"; 
-                font.family: config.Font; font.pointSize: config.FontSize * 0.8; font.bold: true; 
+                font.family: inputContainer.fontFamily; font.pointSize: inputContainer.fontSize * 0.8; font.bold: true; 
                 color: parent.hovered ? "#33ff00" : "white" 
             }
             contentItem: Item {} 
@@ -129,7 +133,7 @@ Column {
             background: Rectangle { color: "transparent" }
             contentItem: Text { 
                 text: parent.text; 
-                font.family: config.Font; font.pointSize: config.FontSize * 0.8; font.bold: true; 
+                font.family: inputContainer.fontFamily; font.pointSize: inputContainer.fontSize * 0.8; font.bold: true; 
                 color: parent.hovered ? "#33ff00" : "white" 
             }
             onClicked: {
@@ -148,6 +152,10 @@ Column {
                 textConstantSession: textConstants.session
                 anchors.left: parent.left
                 anchors.horizontalCenter: undefined 
+                
+                // --- PASS PROPERTIES TO SESSION BUTTON ---
+                fontFamily: inputContainer.fontFamily
+                fontSize: inputContainer.fontSize
             }
         }
     }
@@ -156,7 +164,7 @@ Column {
         id: errorMessage
         text: failed ? config.TranslateLoginFailedWarning : ""
         color: "#ff3333" 
-        font.family: config.Font; font.bold: true; font.pointSize: 16
+        font.family: inputContainer.fontFamily; font.bold: true; font.pointSize: 16
         visible: failed
         Layout.topMargin: 10
     }
