@@ -8,10 +8,8 @@ Pane {
     height: config.ScreenHeight || Screen.height
     width: config.ScreenWidth || Screen.width
 
-    // Load Custom Font
     FontLoader { id: terminalFont; source: "Assets/Fonts/ShareTechMono-Regular.ttf" }
 
-    // Force global white text
     palette.text: "white"
     palette.buttonText: "white"
     palette.window: "transparent"
@@ -34,7 +32,10 @@ Pane {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.leftMargin: config.ScreenPadding
-        anchors.topMargin: config.ScreenPadding
+        
+        // --- CHANGE HERE: Increased top margin to clear the logo ---
+        anchors.topMargin: 250 
+        
         spacing: 10
         width: parent.width * 0.45
 
@@ -64,42 +65,37 @@ Pane {
         
         Item { height: 20; width: 1 } 
 
-        // LOGIN FORM (Username/Password/Session)
+        // LOGIN FORM
         LoginForm {
             id: form
             Layout.fillWidth: true
-            Layout.preferredHeight: 250 // Increased height to fit Session/Show Pass
+            Layout.preferredHeight: 250
         }
 
-        // STATIC LORE TEXT (Visuals only)
+        // LORE TEXT
         Column {
             spacing: 5
             Layout.topMargin: 0
-            
             Text { text: "[ACCESSING PTAI SYSTEM...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: "[LOADING USER PROFILE...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: "[AUTHENTICATION STANDBY]"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
-            
             Item { height: 15; width: 1 }
-
             Text { text: "[INITIALIZING DATA ACCESS...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: "[RETRIEVING INFORMATION...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
-            
             Item { height: 15; width: 1 }
-
             Text { text: ">CMD:/access quick"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: ">[DISPLAYING LOCAL QUICK ACCESS://]"; color: "white"; font.family: terminalFont.name; font.bold: true }
         }
         
-        Item { Layout.fillHeight: true } // Push Power Buttons to bottom
+        Item { Layout.fillHeight: true }
 
-        // POWER CONTROLS (Bottom Left)
+        // POWER CONTROLS
         SystemButtons {
             id: systemButtons
             Layout.alignment: Qt.AlignLeft
             Layout.preferredHeight: 50
             Layout.fillWidth: true
-            Layout.bottomMargin: 50 // Pulls buttons up from the edge
+            Layout.bottomMargin: 50 
             visible: true
         }
     }
@@ -149,9 +145,9 @@ Pane {
             }
         }
         
-        Item { Layout.fillHeight: true } // Spacer
+        Item { Layout.fillHeight: true } 
 
-        // --- CLOCK (Positioned before Important Update) ---
+        // --- CLOCK ---
         Column {
             spacing: 5
             Layout.alignment: Qt.AlignLeft
@@ -167,17 +163,10 @@ Pane {
                 id: timeDisplay
                 font.family: terminalFont.name
                 font.bold: true
-                font.pointSize: 48 // Big Digital Clock
+                font.pointSize: 48 
                 color: "white"
-                
-                function updateTime() {
-                    text = Qt.formatDateTime(new Date(), "HH:mm:ss")
-                }
-                
-                Timer {
-                    interval: 1000; running: true; repeat: true
-                    onTriggered: parent.updateTime()
-                }
+                function updateTime() { text = Qt.formatDateTime(new Date(), "HH:mm:ss") }
+                Timer { interval: 1000; running: true; repeat: true; onTriggered: parent.updateTime() }
                 Component.onCompleted: updateTime()
             }
             Text {
@@ -192,12 +181,12 @@ Pane {
 
         Item { height: 20; width: 1 }
 
-        // Important Update (LV-410)
+        // Important Update
         Column {
             spacing: 10
             Text { 
                 text: ">>IMPORTANT UPDATE<<"
-                color: "#33ff00" // Green Header
+                color: "#33ff00"
                 font.family: terminalFont.name
                 font.bold: true
                 font.pointSize: 20
