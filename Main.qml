@@ -1,7 +1,7 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.4
-import QtMultimedia 5.8 // Required for Audio
+import QtMultimedia 5.8
 import "Components"
 
 Pane {
@@ -19,11 +19,8 @@ Pane {
     font.pointSize: config.FontSize
 
     // --- AUDIO SYSTEM ---
-    // Place .wav files in Assets/Sounds/ for this to work
-    SoundEffect { id: soundKeypress; source: "Assets/Sounds/keypress.mp3"; volume: 0.3 }
-    SoundEffect { id: soundAccessGranted; source: "Assets/Sounds/access_granted.mp3" }
-    SoundEffect { id: soundAccessDenied; source: "Assets/Sounds/access_denied.mp3" }
-
+    SoundEffect { id: soundKeypress; source: "Assets/Sounds/keypress.wav"; volume: 0.3 }
+    
     Image {
         id: backgroundImage
         anchors.fill: parent
@@ -47,8 +44,6 @@ Pane {
             id: form
             Layout.fillWidth: true
             Layout.preferredHeight: 400
-            
-            // Pass audio signal down to inputs
             property var soundEffect: soundKeypress 
         }
 
@@ -79,7 +74,7 @@ Pane {
         }
     }
 
-    // --- RIGHT COLUMN (ENHANCED) ---
+    // --- RIGHT COLUMN (NO OVERFLOW) ---
     ColumnLayout {
         id: rightPanel
         anchors.right: parent.right
@@ -109,31 +104,7 @@ Pane {
             }
         }
 
-        // 2. BIOMETRIC IDENTITY
-        Column {
-            spacing: 5
-            Layout.alignment: Qt.AlignLeft
-            Text { text: ">BIOMETRIC_IDENTITY:"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
-            Item {
-                width: 150; height: 150
-                Rectangle { anchors.fill: parent; color: "transparent"; border.color: "white"; border.width: 2 }
-                Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.top: parent.top; anchors.left: parent.left }
-                Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.top: parent.top; anchors.right: parent.right }
-                Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.bottom: parent.bottom; anchors.left: parent.left }
-                Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.bottom: parent.bottom; anchors.right: parent.right }
-                Image {
-                    anchors.fill: parent; anchors.margins: 5
-                    source: userModel.lastUser ? Qt.resolvedUrl(userModel.lastUser) : ""
-                    fillMode: Image.PreserveAspectCrop
-                }
-                Column {
-                    anchors.fill: parent
-                    Repeater { model: 15; Rectangle { width: parent.width; height: 1; color: "black"; opacity: 0.3; y: index * 10 } }
-                }
-            }
-        }
-
-        // 3. REACTOR STATUS (New)
+        // 2. REACTOR STATUS
         Column {
             spacing: 5
             Layout.alignment: Qt.AlignLeft
@@ -146,7 +117,7 @@ Pane {
                     model: 20
                     Rectangle {
                         width: 15; height: 25
-                        // Last few bars dim to simulate less than 100% or just fluctuation
+                        // Last few bars dim to simulate fluctuation
                         color: index < 18 ? "white" : "#444" 
                     }
                 }
@@ -154,7 +125,7 @@ Pane {
             Text { text: "OUTPUT: NOMINAL [100%]"; color: "white"; font.family: terminalFont.name; font.bold: true }
         }
 
-        // 4. COMMS UPLINK (New)
+        // 3. COMMS UPLINK
         Column {
             spacing: 5
             Layout.alignment: Qt.AlignLeft
@@ -169,7 +140,7 @@ Pane {
             }
         }
 
-        // 5. SYSTEM STATUS ARRAY
+        // 4. SYSTEM STATUS ARRAY
         Column {
             spacing: 15
             Layout.alignment: Qt.AlignLeft
@@ -201,7 +172,7 @@ Pane {
         Item { Layout.fillHeight: true }
     }
 
-    // --- FOOTER ---
+    // --- FOOTER (Pinned) ---
     Text {
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
