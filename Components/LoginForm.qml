@@ -7,7 +7,8 @@ ColumnLayout {
     SDDM.TextConstants { id: textConstants }
 
     property bool virtualKeyboardActive
-    property var soundEffect
+    
+    // Expose session name to Main.qml
     property alias currentSessionName: input.sessionName
 
     Input {
@@ -15,8 +16,5 @@ ColumnLayout {
         Layout.alignment: Qt.AlignLeft
         Layout.preferredWidth: parent.width
         Layout.preferredHeight: root.height / 10
-        
-        // Pass the sound effect down
-        soundEffect: formContainer.soundEffect
     }
 }

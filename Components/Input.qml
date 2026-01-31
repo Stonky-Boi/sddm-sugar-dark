@@ -10,7 +10,6 @@ Column {
     property Item exposeLogin: loginButton
     property bool failed
     property alias sessionName: sessionSelect.currentSessionName
-    property var soundEffect
 
     // --- CUSTOM CURSOR ---
     Component {
@@ -74,12 +73,6 @@ Column {
             background: Rectangle { color: "transparent" }
             
             cursorDelegate: blockCursor
-            
-            // PLAY SOUND ON TYPING
-            onTextEdited: {
-                if(inputContainer.soundEffect) inputContainer.soundEffect.play()
-            }
-
             Keys.onReturnPressed: loginButton.clicked()
         }
         Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }

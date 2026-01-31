@@ -1,7 +1,6 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.4
-import QtMultimedia 5.8 
 import "Components"
 
 Pane {
@@ -18,30 +17,6 @@ Pane {
     font.family: terminalFont.name
     font.pointSize: config.FontSize
 
-    // --- AUDIO SYSTEM ---
-    SoundEffect { 
-        id: soundKeypress
-        source: Qt.resolvedUrl("Assets/Sounds/keypress.wav")
-        volume: 0.5 
-    }
-    SoundEffect { 
-        id: soundAccessGranted
-        source: Qt.resolvedUrl("Assets/Sounds/access_granted.wav")
-        volume: 1.0 
-    }
-    SoundEffect { 
-        id: soundAccessDenied
-        source: Qt.resolvedUrl("Assets/Sounds/access_denied.wav")
-        volume: 1.0 
-    }
-
-    // --- LOGIC: PLAY SOUNDS ON LOGIN EVENTS ---
-    Connections {
-        target: sddm
-        function onLoginSucceeded() { soundAccessGranted.play() }
-        function onLoginFailed() { soundAccessDenied.play() }
-    }
-
     Image {
         id: backgroundImage
         anchors.fill: parent
@@ -50,7 +25,7 @@ Pane {
         z: 0
     }
 
-    // --- LEFT COLUMN ---
+    // --- LEFT COLUMN (LOCKED) ---
     ColumnLayout {
         id: leftPanel
         anchors.left: parent.left
@@ -65,9 +40,6 @@ Pane {
             id: form
             Layout.fillWidth: true
             Layout.preferredHeight: 400
-            
-            // Pass audio signal down to inputs for typing sounds
-            property var soundEffect: soundKeypress 
         }
 
         Item { height: 30; width: 1 } 
@@ -97,7 +69,7 @@ Pane {
         }
     }
 
-    // --- RIGHT COLUMN ---
+    // --- RIGHT COLUMN (LIVE STATUS) ---
     ColumnLayout {
         id: rightPanel
         anchors.right: parent.right
@@ -106,13 +78,12 @@ Pane {
         anchors.rightMargin: 50
         anchors.topMargin: 50 
         width: parent.width * 0.4
-        spacing: 40
+        spacing: 35
 
         // 1. SYSTEM TIME
         Column {
             Layout.alignment: Qt.AlignLeft
             spacing: 0
-            
             Text { text: ">SYSTEM_TIME_REF:"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true; font.pointSize: 14 }
             Text {
                 id: timeDisplay
@@ -127,7 +98,7 @@ Pane {
             }
         }
 
-        // 2. REACTOR STATUS
+        // 2. REACTOR STATUS (Live Voltage Fluctuation)
         Column {
             spacing: 5
             Layout.alignment: Qt.AlignLeft
@@ -139,29 +110,106 @@ Pane {
                     model: 20
                     Rectangle {
                         width: 15; height: 25
-                        color: index < 18 ? "white" : "#444" 
+                        property bool active: index < 18
+                        
+                        // Voltage Flicker Animation
+                        color: active ? "white" : "#444"
+                        opacity: active ? (0.8 + Math.random()*0.2) : 1 // Flicker effect
+                        
+                        Timer {
+                            interval: 100 + Math.random() * 500
+                            running: true
+                            repeat: true
+                            onTriggered: parent.opacity = parent.active ? (0.8 + Math.random()*0.2) : 1
+                        }
                     }
                 }
             }
-            Text { text: "OUTPUT: NOMINAL [100%]"; color: "white"; font.family: terminalFont.name; font.bold: true }
+            RowLayout {
+                spacing: 10
+                Text { text: "OUTPUT: NOMINAL"; color: "white"; font.family: terminalFont.name; font.bold: true }
+                Text { 
+                    text: "[ " + (100 + Math.floor(Math.random() * 3)) + "% ]" // 100-102%
+                    color: "#33ff00"; font.family: terminalFont.name; font.bold: true
+                    Timer { interval: 800; running: true; repeat: true; onTriggered: parent.text = "[ " + (100 + Math.floor(Math.random() * 3)) + "% ]" }
+                }
+            }
         }
 
-        // 3. COMMS UPLINK
+        // 3. COMMS UPLINK (Signal Noise)
         Column {
             spacing: 5
             Layout.alignment: Qt.AlignLeft
             Text { text: ">COMMS_UPLINK_ARRAY:"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
-            
-            Text { text: "PRIORITY: 1"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: "ENCRYPTION: [ AES-256 ]"; color: "white"; font.family: terminalFont.name; font.bold: true }
+            
             RowLayout {
                 spacing: 10
                 Text { text: "SIGNAL_STRENGTH:"; color: "white"; font.family: terminalFont.name; font.bold: true }
-                Text { text: "|||||||||||| [-32dBm]"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
+                Text { 
+                    text: "|||||||||||| [ -" + (32 + Math.floor(Math.random() * 4)) + "dBm ]" // -32 to -36 dBm
+                    color: "#33ff00"; font.family: terminalFont.name; font.bold: true 
+                    Timer { interval: 1500; running: true; repeat: true; onTriggered: parent.text = "|||||||||||| [ -" + (32 + Math.floor(Math.random() * 4)) + "dBm ]" }
+                }
             }
         }
 
-        // 4. SYSTEM STATUS ARRAY
+        // 4. MEMORY BANK (Simulated Allocation)
+        Column {
+            spacing: 5
+            Layout.alignment: Qt.AlignLeft
+            Text { text: ">MEMORY_ALLOCATION:"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
+            
+            RowLayout {
+                spacing: 5
+                // Bank 01
+                Rectangle {
+                    width: 150; height: 15
+                    color: "#222"; border.color: "white"; border.width: 1
+                    Rectangle {
+                        height: parent.height - 4; x: 2; y: 2
+                        color: "white"
+                        width: parent.width * 0.4 // Base usage
+                        
+                        // Memory "Breathing" Animation
+                        SequentialAnimation on width {
+                            loops: Animation.Infinite
+                            NumberAnimation { to: 100; duration: 2000; easing.type: Easing.InOutQuad }
+                            NumberAnimation { to: 60; duration: 2000; easing.type: Easing.InOutQuad }
+                        }
+                    }
+                }
+                Text { text: "[ BANK_01: ACTIVE ]"; color: "white"; font.family: terminalFont.name; font.bold: true }
+            }
+        }
+
+        // 5. STORAGE STATUS (Simulated I/O)
+        Column {
+            spacing: 5
+            Layout.alignment: Qt.AlignLeft
+            Text { text: ">DATA_VOLUME_STATUS:"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
+            
+            RowLayout {
+                spacing: 10
+                Text { text: "MOUNT: /DEV/NVME0N1"; color: "white"; font.family: terminalFont.name; font.bold: true }
+                Text { 
+                    text: "[ READ ]"
+                    color: parent.blink ? "#33ff00" : "#222"
+                    font.family: terminalFont.name; font.bold: true
+                    property bool blink: false
+                    Timer { interval: 100; running: true; repeat: true; onTriggered: parent.blink = Math.random() > 0.7 }
+                }
+                Text { 
+                    text: "[ WRITE ]"
+                    color: parent.blink ? "red" : "#222"
+                    font.family: terminalFont.name; font.bold: true
+                    property bool blink: false
+                    Timer { interval: 100; running: true; repeat: true; onTriggered: parent.blink = Math.random() > 0.9 } // Writes represent rare events
+                }
+            }
+        }
+
+        // 6. SYSTEM STATUS ARRAY
         Column {
             spacing: 15
             Layout.alignment: Qt.AlignLeft
@@ -180,6 +228,7 @@ Pane {
             RowLayout {
                 spacing: 10
                 Text { text: "INPUT_NODE:"; color: "white"; font.family: terminalFont.name; font.bold: true }
+                // SAFE CHECK
                 Text { 
                     text: keyboard.layouts && keyboard.layouts.length > 0 ? "[" + keyboard.layouts[keyboard.currentLayout].toString().toUpperCase() + "]" : "[STD_INPUT]"
                     color: "white"; font.family: terminalFont.name; font.bold: true 
