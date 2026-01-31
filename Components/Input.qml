@@ -10,8 +10,6 @@ Column {
     property Item exposeLogin: loginButton
     property bool failed
     property alias sessionName: sessionSelect.currentSessionName
-    
-    // --- CRITICAL FIX: Receive the keyboard object ---
     property var keyboard
 
     // --- CUSTOM CURSOR ---
@@ -33,8 +31,15 @@ Column {
     // --- USERNAME ---
     RowLayout {
         spacing: 0; Layout.fillWidth: true; z: 200 
-        Text { text: "LOGIN:   "; color: "white"; font.family: root.font.family; font.pointSize: root.font.pointSize; font.bold: true; Layout.rightMargin: 10 }
-        Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
+        Text { 
+            text: "LOGIN:   "; color: "white"; 
+            font.family: config.Font; font.pointSize: config.FontSize; font.bold: true; 
+            Layout.rightMargin: 10 
+        }
+        Text { 
+            text: "["; color: "white"; 
+            font.pointSize: config.FontSize; font.bold: true 
+        }
         
         ComboBox {
             id: username
@@ -43,7 +48,11 @@ Column {
             textRole: "name"
             currentIndex: model.lastIndex
             background: Rectangle { color: "transparent" }
-            contentItem: Text { text: parent.currentText; color: "white"; font.family: root.font.family; font.pointSize: root.font.pointSize; font.bold: true; verticalAlignment: Text.AlignVCenter }
+            contentItem: Text { 
+                text: parent.currentText; color: "white"; 
+                font.family: config.Font; font.pointSize: config.FontSize; font.bold: true; 
+                verticalAlignment: Text.AlignVCenter 
+            }
             popup: Popup {
                 y: parent.height; width: parent.width; implicitHeight: contentItem.implicitHeight; padding: 1
                 contentItem: ListView { clip: true; implicitHeight: contentHeight; model: username.popup.visible ? username.delegateModel : null; currentIndex: username.highlightedIndex }
@@ -51,18 +60,31 @@ Column {
             }
             delegate: ItemDelegate {
                 width: parent.width
-                contentItem: Text { text: model.name; color: hovered ? "black" : "white"; font.family: root.font.family; font.bold: true }
+                contentItem: Text { 
+                    text: model.name; color: hovered ? "black" : "white"; 
+                    font.family: config.Font; font.bold: true 
+                }
                 background: Rectangle { color: hovered ? "#33ff00" : "black" }
             }
         }
-        Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
+        Text { 
+            text: "]"; color: "white"; 
+            font.pointSize: config.FontSize; font.bold: true 
+        }
     }
 
     // --- PASSWORD ---
     RowLayout {
         spacing: 0; Layout.fillWidth: true; z: 100
-        Text { text: "PASSWORD:"; color: "white"; font.family: root.font.family; font.pointSize: root.font.pointSize; font.bold: true; Layout.rightMargin: 10 }
-        Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
+        Text { 
+            text: "PASSWORD:"; color: "white"; 
+            font.family: config.Font; font.pointSize: config.FontSize; font.bold: true; 
+            Layout.rightMargin: 10 
+        }
+        Text { 
+            text: "["; color: "white"; 
+            font.pointSize: config.FontSize; font.bold: true 
+        }
         
         TextField {
             id: password
@@ -70,7 +92,7 @@ Column {
             focus: config.ForcePasswordFocus == "true"
             echoMode: revealSecret.checked ? TextInput.Normal : TextInput.Password
             passwordCharacter: "*"
-            font.family: root.font.family; font.pointSize: root.font.pointSize; font.bold: true
+            font.family: config.Font; font.pointSize: config.FontSize; font.bold: true
             color: "white"
             horizontalAlignment: TextInput.AlignLeft
             background: Rectangle { color: "transparent" }
@@ -78,7 +100,10 @@ Column {
             cursorDelegate: blockCursor
             Keys.onReturnPressed: loginButton.clicked()
         }
-        Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
+        Text { 
+            text: "]"; color: "white"; 
+            font.pointSize: config.FontSize; font.bold: true 
+        }
     }
 
     // --- CONTROLS STACK ---
@@ -87,7 +112,11 @@ Column {
         CheckBox {
             id: revealSecret
             hoverEnabled: true
-            indicator: Text { text: parent.checked ? "[X] SHOW" : "[ ] SHOW"; font.family: root.font.family; font.pointSize: root.font.pointSize * 0.8; font.bold: true; color: parent.hovered ? "#33ff00" : "white" }
+            indicator: Text { 
+                text: parent.checked ? "[X] SHOW" : "[ ] SHOW"; 
+                font.family: config.Font; font.pointSize: config.FontSize * 0.8; font.bold: true; 
+                color: parent.hovered ? "#33ff00" : "white" 
+            }
             contentItem: Item {} 
         }
     }
@@ -98,9 +127,11 @@ Column {
             text: "[ KEYBOARD ]"
             hoverEnabled: true; visible: true
             background: Rectangle { color: "transparent" }
-            contentItem: Text { text: parent.text; font.family: root.font.family; font.pointSize: root.font.pointSize * 0.8; font.bold: true; color: parent.hovered ? "#33ff00" : "white" }
-            
-            // --- CRITICAL FIX: Use the keyboard object ---
+            contentItem: Text { 
+                text: parent.text; 
+                font.family: config.Font; font.pointSize: config.FontSize * 0.8; font.bold: true; 
+                color: parent.hovered ? "#33ff00" : "white" 
+            }
             onClicked: {
                 if(inputContainer.keyboard) 
                     inputContainer.keyboard.active = !inputContainer.keyboard.active
@@ -125,7 +156,7 @@ Column {
         id: errorMessage
         text: failed ? config.TranslateLoginFailedWarning : ""
         color: "#ff3333" 
-        font.family: root.font.family; font.bold: true; font.pointSize: 16
+        font.family: config.Font; font.bold: true; font.pointSize: 16
         visible: failed
         Layout.topMargin: 10
     }
