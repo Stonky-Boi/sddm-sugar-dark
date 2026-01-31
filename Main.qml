@@ -31,7 +31,7 @@ Pane {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.leftMargin: 100
+        anchors.leftMargin: 50
         anchors.topMargin: 150 
         spacing: 10
         width: parent.width * 0.45
