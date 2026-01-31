@@ -5,20 +5,23 @@ import QtQuick.Controls 2.4
 RowLayout {
     spacing: 30
     Layout.alignment: Qt.AlignLeft
+    // Ensure it sits on top of any background layers
+    z: 100 
 
-    property var suspend: ["[SUSPEND]", config.TranslateSuspend, sddm.canSuspend]
-    property var hibernate: ["[HIBERNATE]", config.TranslateHibernate, sddm.canHibernate]
-    property var reboot: ["[REBOOT]", config.TranslateReboot, sddm.canReboot]
-    property var shutdown: ["[TERMINATE]", config.TranslateShutdown, sddm.canPowerOff]
-
-    property Control exposedLogin
+    // Define buttons: [Text, Translation, Check]
+    // We set the 3rd value to 'true' to FORCE them to show up
+    property var suspend:   ["[SUSPEND]",   config.TranslateSuspend,   true]
+    property var hibernate: ["[HIBERNATE]", config.TranslateHibernate, true]
+    property var reboot:    ["[REBOOT]",    config.TranslateReboot,    true]
+    property var shutdown:  ["[TERMINATE]", config.TranslateShutdown,  true]
 
     Repeater {
         model: [suspend, hibernate, reboot, shutdown]
 
         Button {
             text: modelData[0]
-            visible: modelData[2]
+            // This forces the button to be visible regardless of system state
+            visible: true 
             hoverEnabled: true
             
             contentItem: Text {
@@ -26,7 +29,7 @@ RowLayout {
                 font.family: root.font.family
                 font.pointSize: root.font.pointSize
                 font.bold: true 
-                // INTERACTIVITY: White by default, Green when mouse hovers
+                // Default White, Green on Hover
                 color: parent.hovered ? "#33ff00" : "white"
             }
 
