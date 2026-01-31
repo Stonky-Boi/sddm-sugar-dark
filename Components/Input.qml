@@ -9,13 +9,12 @@ Column {
 
     property Control exposeLogin: loginButton
     property bool failed
-    property string currentSessionName: sessionSelect.selectedSessionName
+    property alias sessionName: sessionSelect.currentSessionName
 
     // --- USERNAME ---
     RowLayout {
         spacing: 0 
         Layout.fillWidth: true
-
         Text {
             text: "LOGIN:   "
             color: "white" 
@@ -25,7 +24,6 @@ Column {
             Layout.rightMargin: 10
         }
         Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
-        
         TextField {
             id: username
             Layout.preferredWidth: 250
@@ -37,11 +35,9 @@ Column {
             color: "white" 
             horizontalAlignment: TextInput.AlignLeft
             background: Rectangle { color: "transparent" }
-            
             Keys.onReturnPressed: loginButton.clicked()
             KeyNavigation.down: password
         }
-        
         Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
@@ -49,7 +45,6 @@ Column {
     RowLayout {
         spacing: 0
         Layout.fillWidth: true
-
         Text {
             text: "PASSWORD:"
             color: "white" 
@@ -59,7 +54,6 @@ Column {
             Layout.rightMargin: 10
         }
         Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
-        
         TextField {
             id: password
             Layout.preferredWidth: 250
@@ -73,42 +67,36 @@ Column {
             color: "white"
             horizontalAlignment: TextInput.AlignLeft
             background: Rectangle { color: "transparent" }
-            
             Keys.onReturnPressed: loginButton.clicked()
         }
-        
         Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
-    // --- CONTROLS ROW (Show Password + Session) ---
+    // --- CONTROLS ROW ---
     RowLayout {
         spacing: 20
         Layout.topMargin: 5
-        Layout.leftMargin: 105 // Aligns with the input boxes visually
+        Layout.leftMargin: 105 
 
-        // Show Password Toggle
         CheckBox {
             id: revealSecret
             hoverEnabled: true
-            
             indicator: Text {
                 text: parent.checked ? "[X] SHOW" : "[ ] SHOW"
                 font.family: root.font.family
                 font.pointSize: root.font.pointSize * 0.9
                 font.bold: true
-                color: parent.hovered ? "#33ff00" : "white" // Turns green on hover
+                color: parent.hovered ? "#33ff00" : "white" 
             }
-            contentItem: Item {} // Hide standard text
+            contentItem: Item {} 
         }
 
-        // Session Selector (e.g. Hyprland/Plasma)
         SessionButton {
             id: sessionSelect
             textConstantSession: textConstants.session
         }
     }
 
-    // --- ERROR MESSAGE ---
     Text {
         id: errorMessage
         text: failed ? config.TranslateLoginFailedWarning : ""

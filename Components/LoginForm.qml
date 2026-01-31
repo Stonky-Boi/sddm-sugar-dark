@@ -9,10 +9,7 @@ ColumnLayout {
     property int p: config.ScreenPadding
     property string a: config.FormPosition
     property bool virtualKeyboardActive
-    property alias sessionName: input.currentSessionName
-
-    // We removed the Clock and SystemButtons from here 
-    // because they are now handled by the Main.qml layout.
+    property alias currentSessionName: input.sessionName
 
     Input {
         id: input

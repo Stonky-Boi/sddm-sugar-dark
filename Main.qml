@@ -25,14 +25,19 @@ Pane {
         z: 0
     }
 
-    // --- LEFT COLUMN (Untouched) ---
+    // --- LEFT COLUMN: LOGIN & CONTROLS ---
     ColumnLayout {
         id: leftPanel
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+        
+        // --- 1. SET MARGIN TO 50 ---
         anchors.leftMargin: 50
+        
+        // Align with the "Cut" in the wallpaper logo
         anchors.topMargin: 150 
+        
         spacing: 10
         width: parent.width * 0.45
 
@@ -69,24 +74,24 @@ Pane {
         }
     }
 
-    // --- RIGHT COLUMN: FUNCTIONAL DASHBOARD ---
+    // --- RIGHT COLUMN: FULL SYSTEM DASHBOARD ---
     ColumnLayout {
         id: rightPanel
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.rightMargin: config.ScreenPadding
-        anchors.topMargin: 150 // Align top with Left Column
+        anchors.rightMargin: 50 // Matching the left margin
+        anchors.topMargin: 150 
         width: parent.width * 0.4
         spacing: 40
 
-        // 1. SYSTEM TIME (The Hero Element)
+        // 1. SYSTEM TIME
         Column {
             Layout.alignment: Qt.AlignLeft
             spacing: 0
             
             Text {
-                text: "SYSTEM_TIME_REF:"
+                text: ">SYSTEM_TIME_REF:"
                 color: "#33ff00"
                 font.family: terminalFont.name
                 font.bold: true
@@ -96,14 +101,14 @@ Pane {
                 id: timeDisplay
                 font.family: terminalFont.name
                 font.bold: true
-                font.pointSize: 64 // Bigger
+                font.pointSize: 64 
                 color: "white"
                 function updateTime() { text = Qt.formatDateTime(new Date(), "HH:mm") }
                 Timer { interval: 1000; running: true; repeat: true; onTriggered: parent.updateTime() }
                 Component.onCompleted: updateTime()
             }
             Text {
-                text: Qt.formatDateTime(new Date(), "ss") + " TICKS" // Seconds as "Ticks"
+                text: Qt.formatDateTime(new Date(), "ss") + " TICKS"
                 font.family: terminalFont.name
                 font.bold: true
                 font.pointSize: 24
@@ -120,14 +125,13 @@ Pane {
             }
         }
 
-        // 2. BIOMETRIC SCAN (User Avatar)
-        // This attempts to load the user's face icon. If none, it shows a placeholder box.
+        // 2. BIOMETRIC IDENTITY (Avatar)
         Column {
             spacing: 5
             Layout.alignment: Qt.AlignLeft
             
             Text {
-                text: ">BIOMETRIC_MATCH:"
+                text: ">BIOMETRIC_IDENTITY:"
                 color: "#33ff00"
                 font.family: terminalFont.name
                 font.bold: true
@@ -137,10 +141,10 @@ Pane {
                 width: 150
                 height: 150
                 
-                // Green Brackets around the photo
+                // Outer Frame
                 Rectangle { anchors.fill: parent; color: "transparent"; border.color: "white"; border.width: 2 }
                 
-                // Corner accents
+                // Corner Brackets (Green)
                 Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.top: parent.top; anchors.left: parent.left }
                 Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.top: parent.top; anchors.right: parent.right }
                 Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.bottom: parent.bottom; anchors.left: parent.left }
@@ -151,55 +155,76 @@ Pane {
                     anchors.margins: 5
                     source: userModel.lastUser ? Qt.resolvedUrl(userModel.lastUser) : ""
                     fillMode: Image.PreserveAspectCrop
-                    visible: source != ""
                 }
                 
-                // Fallback text if no image
-                Text {
-                    anchors.centerIn: parent
-                    text: "NO_BIO_DATA"
-                    visible: parent.children[4].status !== Image.Ready
-                    color: "white"
-                    font.family: terminalFont.name
-                    opacity: 0.5
+                // Scanline effect (Simple lines overlay)
+                Column {
+                    anchors.fill: parent
+                    Repeater {
+                        model: 15
+                        Rectangle {
+                            width: parent.width; height: 1
+                            color: "black"; opacity: 0.3
+                            y: index * 10
+                        }
+                    }
                 }
             }
         }
 
-        // 3. ENVIRONMENT PARAMETERS (Session Info)
+        // 3. SYSTEM STATUS ARRAY (Hostname, Session, Layout)
         Column {
-            spacing: 10
+            spacing: 15
             Layout.alignment: Qt.AlignLeft
             
             Text { 
-                text: ">ENVIRONMENT_TARGET:"
+                text: ">SYSTEM_STATUS_ARRAY:"
                 color: "#33ff00"
                 font.family: terminalFont.name
                 font.bold: true
             }
-            
-            // This mirrors the session selected in the left column
-            Text { 
-                // Accessing the session model to get the name
-                text: "[" + form.sessionName.toUpperCase() + "]" 
-                color: "white"
-                font.family: terminalFont.name
-                font.bold: true
-                font.pointSize: 24
+
+            // HOSTNAME
+            RowLayout {
+                spacing: 10
+                Text { text: "HOST_NODE:"; color: "white"; font.family: terminalFont.name; font.bold: true }
+                Text { 
+                    text: "[" + sddm.hostName.toUpperCase() + "]"
+                    color: "white"; font.family: terminalFont.name; font.bold: true 
+                }
+            }
+
+            // SESSION TARGET (Bubbled up from left column)
+            RowLayout {
+                spacing: 10
+                Text { text: "TARGET_ENV:"; color: "white"; font.family: terminalFont.name; font.bold: true }
+                Text { 
+                    text: "[" + (form.currentSessionName ? form.currentSessionName.toUpperCase() : "DEFAULT") + "]"
+                    color: "white"; font.family: terminalFont.name; font.bold: true 
+                }
+            }
+
+            // KEYBOARD LAYOUT
+            RowLayout {
+                spacing: 10
+                Text { text: "INPUT_NODE:"; color: "white"; font.family: terminalFont.name; font.bold: true }
+                Text { 
+                    // Tries to get layout name, falls back to "STD_INPUT" if null
+                    text: keyboard.layouts ? "[" + keyboard.layouts[keyboard.currentLayout].toUpperCase() + "]" : "[STD_INPUT]"
+                    color: "white"; font.family: terminalFont.name; font.bold: true 
+                }
             }
             
-            Text { 
-                text: "Layout: " + Qt.locale().name.toUpperCase()
-                color: "white"
-                font.family: terminalFont.name
-                font.bold: true
-                opacity: 0.7
+            // POWER STATUS (Fake reading, but consistent with theme)
+            RowLayout {
+                spacing: 10
+                Text { text: "AC_PWR_BUS:"; color: "white"; font.family: terminalFont.name; font.bold: true }
+                Text { text: "[ONLINE]"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
             }
         }
         
         Item { Layout.fillHeight: true }
         
-        // FOOTER (Copyright)
         Text {
             text: "(C) SM-LINK DATA SYSTEMS"
             color: "white"

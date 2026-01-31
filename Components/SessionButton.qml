@@ -10,14 +10,12 @@ Item {
 
     property var selectedSession: selectSession.currentIndex
     property string textConstantSession
-    property string selectedSessionName: selectSession.currentText
+    property string currentSessionName: selectSession.currentText
 
     ComboBox {
         id: selectSession
-
         hoverEnabled: true
         anchors.left: parent.left
-
         model: sessionModel
         currentIndex: model.lastIndex
         textRole: "name"
@@ -38,9 +36,7 @@ Item {
             }
         }
 
-        indicator {
-            visible: false
-        }
+        indicator: Item { visible: false }
 
         contentItem: Text {
             id: displayedItem
@@ -78,7 +74,6 @@ Item {
                 currentIndex: selectSession.highlightedIndex
                 ScrollIndicator.vertical: ScrollIndicator { }
             }
-
             background: Rectangle {
                 radius: config.RoundCorners / 2
                 color: "#444"
@@ -93,60 +88,7 @@ Item {
                     color: "#88000000"
                 }
             }
-
-            enter: Transition {
-                NumberAnimation { property: "opacity"; from: 0; to: 1 }
-            }
+            enter: Transition { NumberAnimation { property: "opacity"; from: 0; to: 1 } }
         }
-
-        states: [
-            State {
-                name: "pressed"
-                when: selectSession.down
-                PropertyChanges {
-                    target: displayedItem
-                    color: Qt.darker(root.palette.highlight, 1.1)
-                }
-                PropertyChanges {
-                    target: selectSession.background
-                    border.color: Qt.darker(root.palette.highlight, 1.1)
-                }
-            },
-            State {
-                name: "hovered"
-                when: selectSession.hovered
-                PropertyChanges {
-                    target: displayedItem
-                    color: Qt.lighter(root.palette.highlight, 1.1)
-                }
-                PropertyChanges {
-                    target: selectSession.background
-                    border.color: Qt.lighter(root.palette.highlight, 1.1)
-                }
-            },
-            State {
-                name: "focused"
-                when: selectSession.visualFocus
-                PropertyChanges {
-                    target: displayedItem
-                    color: root.palette.highlight
-                }
-                PropertyChanges {
-                    target: selectSession.background
-                    border.color: root.palette.highlight
-                }
-            }
-        ]
-
-        transitions: [
-            Transition {
-                PropertyAnimation {
-                    properties: "color, border.color"
-                    duration: 150
-                }
-            }
-        ]
-
     }
-
 }
