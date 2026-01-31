@@ -5,6 +5,7 @@ Item {
     id: root
     visible: active
     property bool active: false
+    property string fontFamily: "Monospace"
     
     anchors.fill: parent
     z: 200
@@ -24,7 +25,7 @@ Item {
             Text {
                 text: "VIRTUAL_INPUT_DEVICE"
                 color: "#33ff00"
-                font.family: config.Font
+                font.family: root.fontFamily
                 font.bold: true
                 font.pointSize: 20
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -32,7 +33,7 @@ Item {
             Text {
                 text: "[ KEYBOARD DRIVER ONLINE ]"
                 color: "white"
-                font.family: config.Font
+                font.family: root.fontFamily
                 font.pointSize: 14
                 anchors.horizontalCenter: parent.horizontalCenter
             }

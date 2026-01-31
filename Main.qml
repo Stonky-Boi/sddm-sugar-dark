@@ -40,7 +40,6 @@ Pane {
             id: form
             Layout.fillWidth: true
             Layout.preferredHeight: 400
-            // --- CRITICAL FIX: Pass the keyboard object down ---
             keyboard: virtualKeyboard 
         }
 
@@ -68,6 +67,9 @@ Pane {
             Layout.fillWidth: true
             Layout.bottomMargin: 50 
             visible: true
+            
+            // --- CRITICAL FIX: Pass the font family explicitly ---
+            fontFamily: terminalFont.name
         }
     }
 
@@ -259,6 +261,11 @@ Pane {
         z: 200 
         property bool active: item ? item.active : false
         anchors.fill: parent
+        
+        // --- CRITICAL FIX: Pass font family to keyboard loader items ---
+        property string fontFamily: terminalFont.name
+        onLoaded: item.fontFamily = terminalFont.name
+
         states: [
             State { name: "visible"; when: virtualKeyboard.active; PropertyChanges { target: virtualKeyboard; opacity: 1 } },
             State { name: "hidden"; when: !virtualKeyboard.active; PropertyChanges { target: virtualKeyboard; opacity: 0 } }

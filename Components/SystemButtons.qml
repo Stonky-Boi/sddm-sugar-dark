@@ -7,6 +7,9 @@ RowLayout {
     Layout.alignment: Qt.AlignLeft
     z: 100 
 
+    // Receive Font from Main.qml
+    property string fontFamily: "Monospace"
+
     // Define buttons: [Text, ActionIndex]
     // 0=Suspend, 1=Hibernate, 2=Reboot, 3=Shutdown
     property var buttons: [
@@ -29,9 +32,9 @@ RowLayout {
             
             contentItem: Text {
                 text: parent.text
-                // Using config.Font prevents reference errors
-                font.family: config.Font 
-                font.pointSize: config.FontSize * 0.9 
+                // USE THE PASSED FONT PROPERTY
+                font.family: parent.parent.parent.fontFamily 
+                font.pointSize: 16 * 0.9 
                 font.bold: true 
                 color: btn.hovered ? "#33ff00" : "white"
             }
