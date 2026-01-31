@@ -8,10 +8,8 @@ Pane {
     height: config.ScreenHeight || Screen.height
     width: config.ScreenWidth || Screen.width
 
-    // Load Custom Font
     FontLoader { id: terminalFont; source: "Assets/Fonts/ShareTechMono-Regular.ttf" }
 
-    // Force global white text
     palette.text: "white"
     palette.buttonText: "white"
     palette.window: "transparent"
@@ -27,53 +25,40 @@ Pane {
         z: 0
     }
 
-    // --- LEFT COLUMN: LOGIN & CONTROLS ---
+    // --- LEFT COLUMN (Untouched) ---
     ColumnLayout {
         id: leftPanel
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        
-        anchors.leftMargin: 50
-        
-        // Top Margin to clear the vertical space of the logo
+        anchors.leftMargin: 100
         anchors.topMargin: 150 
-        
         spacing: 10
         width: parent.width * 0.45
 
-        // LOGIN FORM
         LoginForm {
             id: form
             Layout.fillWidth: true
             Layout.preferredHeight: 250
         }
 
-        // Spacer to separate Login from Bottom Text
         Item { height: 80; width: 1 } 
 
-        // LORE TEXT (Fake Terminal Logs)
         Column {
             spacing: 5
-            
             Text { text: "[ACCESSING PTAI SYSTEM...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: "[LOADING USER PROFILE...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: "[AUTHENTICATION STANDBY]"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
-            
             Item { height: 15; width: 1 }
-
             Text { text: "[INITIALIZING DATA ACCESS...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: "[RETRIEVING INFORMATION...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
-            
             Item { height: 15; width: 1 }
-
             Text { text: ">CMD:/access quick"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: ">[DISPLAYING LOCAL QUICK ACCESS://]"; color: "white"; font.family: terminalFont.name; font.bold: true }
         }
         
-        Item { Layout.fillHeight: true } // Push Power Buttons to bottom
+        Item { Layout.fillHeight: true } 
 
-        // POWER CONTROLS
         SystemButtons {
             id: systemButtons
             Layout.alignment: Qt.AlignLeft
@@ -84,60 +69,24 @@ Pane {
         }
     }
 
-    // --- RIGHT COLUMN: REMINDERS, CLOCK & UPDATES ---
+    // --- RIGHT COLUMN: FUNCTIONAL DASHBOARD ---
     ColumnLayout {
         id: rightPanel
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.rightMargin: config.ScreenPadding
-        anchors.topMargin: config.ScreenPadding
+        anchors.topMargin: 150 // Align top with Left Column
         width: parent.width * 0.4
-        spacing: 30
+        spacing: 40
 
-        // Reminder Block
+        // 1. SYSTEM TIME (The Hero Element)
         Column {
-            spacing: 5
-            Text { 
-                text: ">WYC REMINDER: SAFETY SECOND! PROFIT FIRST!"
-                color: "white" 
-                font.family: terminalFont.name
-                font.bold: true
-            }
-            Text { 
-                text: "[00]D [00]H [00]M [19]S since last accident"
-                color: "white" 
-                font.family: terminalFont.name
-                font.bold: true
-            }
-        }
-
-        // Vacation Timer
-        Column {
-            spacing: 5
-            Text { 
-                text: ">Remaining Work Time Till Yvaga III Vacation"
-                color: "white"
-                font.family: terminalFont.name
-                font.bold: true
-            }
-            Text { 
-                text: "[28489]D [21]H [5]M [5]S"
-                color: "white"
-                font.family: terminalFont.name
-                font.bold: true
-            }
-        }
-        
-        Item { Layout.fillHeight: true } 
-
-        // --- CLOCK ---
-        Column {
-            spacing: 5
             Layout.alignment: Qt.AlignLeft
+            spacing: 0
             
             Text {
-                text: ">SYSTEM TIME:"
+                text: "SYSTEM_TIME_REF:"
                 color: "#33ff00"
                 font.family: terminalFont.name
                 font.bold: true
@@ -147,14 +96,22 @@ Pane {
                 id: timeDisplay
                 font.family: terminalFont.name
                 font.bold: true
-                font.pointSize: 48 
+                font.pointSize: 64 // Bigger
                 color: "white"
-                function updateTime() { text = Qt.formatDateTime(new Date(), "HH:mm:ss") }
+                function updateTime() { text = Qt.formatDateTime(new Date(), "HH:mm") }
                 Timer { interval: 1000; running: true; repeat: true; onTriggered: parent.updateTime() }
                 Component.onCompleted: updateTime()
             }
             Text {
-                text: Qt.formatDateTime(new Date(), "dddd, yyyy-MM-dd")
+                text: Qt.formatDateTime(new Date(), "ss") + " TICKS" // Seconds as "Ticks"
+                font.family: terminalFont.name
+                font.bold: true
+                font.pointSize: 24
+                color: "#33ff00"
+                anchors.right: timeDisplay.right
+            }
+            Text {
+                text: Qt.formatDateTime(new Date(), "dddd, yyyy-MM-dd").toUpperCase()
                 font.family: terminalFont.name
                 font.bold: true
                 font.pointSize: 18
@@ -163,59 +120,92 @@ Pane {
             }
         }
 
-        Item { height: 20; width: 1 }
-
-        // Important Update
+        // 2. BIOMETRIC SCAN (User Avatar)
+        // This attempts to load the user's face icon. If none, it shows a placeholder box.
         Column {
-            spacing: 10
-            Text { 
-                text: ">>IMPORTANT UPDATE<<"
+            spacing: 5
+            Layout.alignment: Qt.AlignLeft
+            
+            Text {
+                text: ">BIOMETRIC_MATCH:"
                 color: "#33ff00"
                 font.family: terminalFont.name
                 font.bold: true
-                font.pointSize: 20
             }
+            
+            Item {
+                width: 150
+                height: 150
+                
+                // Green Brackets around the photo
+                Rectangle { anchors.fill: parent; color: "transparent"; border.color: "white"; border.width: 2 }
+                
+                // Corner accents
+                Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.top: parent.top; anchors.left: parent.left }
+                Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.top: parent.top; anchors.right: parent.right }
+                Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.bottom: parent.bottom; anchors.left: parent.left }
+                Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.bottom: parent.bottom; anchors.right: parent.right }
+
+                Image {
+                    anchors.fill: parent
+                    anchors.margins: 5
+                    source: userModel.lastUser ? Qt.resolvedUrl(userModel.lastUser) : ""
+                    fillMode: Image.PreserveAspectCrop
+                    visible: source != ""
+                }
+                
+                // Fallback text if no image
+                Text {
+                    anchors.centerIn: parent
+                    text: "NO_BIO_DATA"
+                    visible: parent.children[4].status !== Image.Ready
+                    color: "white"
+                    font.family: terminalFont.name
+                    opacity: 0.5
+                }
+            }
+        }
+
+        // 3. ENVIRONMENT PARAMETERS (Session Info)
+        Column {
+            spacing: 10
+            Layout.alignment: Qt.AlignLeft
+            
             Text { 
-                width: parent.parent.width
-                wrapMode: Text.WordWrap
-                text: "ORBITAL MINERAL HARVESTING OVER LV-410\nHALTED UNTIL FURTHER NOTICE DUE TO UNKNOWN\nDEBRIS FIELD NEAR OPERATION AREA."
+                text: ">ENVIRONMENT_TARGET:"
+                color: "#33ff00"
+                font.family: terminalFont.name
+                font.bold: true
+            }
+            
+            // This mirrors the session selected in the left column
+            Text { 
+                // Accessing the session model to get the name
+                text: "[" + form.sessionName.toUpperCase() + "]" 
                 color: "white"
                 font.family: terminalFont.name
                 font.bold: true
-                font.pointSize: 14 
+                font.pointSize: 24
             }
+            
             Text { 
-                width: parent.parent.width
-                wrapMode: Text.WordWrap
-                text: "THE SPREAD OF RUMORS OF ROGUE PERSONNEL ARE\nBASELESS."
+                text: "Layout: " + Qt.locale().name.toUpperCase()
                 color: "white"
                 font.family: terminalFont.name
                 font.bold: true
-                font.pointSize: 14
-            }
-            Text { 
-                width: parent.parent.width
-                wrapMode: Text.WordWrap
-                text: "AIR CURFEW IS IN EFFECT.\nHAULERS OVER 50000FT WILL BE TARGETED BY\nDEFENSE SYSTEMS."
-                color: "white"
-                font.family: terminalFont.name
-                font.bold: true
-                font.pointSize: 14
+                opacity: 0.7
             }
         }
         
         Item { Layout.fillHeight: true }
-    }
-
-    // --- FOOTER ---
-    Text {
-        anchors.bottom: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottomMargin: 20
-        text: "(C) SM-LINK DATA SYSTEMS"
-        color: "white"
-        font.family: terminalFont.name
-        font.bold: true
-        opacity: 0.8
+        
+        // FOOTER (Copyright)
+        Text {
+            text: "(C) SM-LINK DATA SYSTEMS"
+            color: "white"
+            font.family: terminalFont.name
+            font.bold: true
+            opacity: 0.8
+        }
     }
 }

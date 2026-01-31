@@ -9,6 +9,7 @@ Column {
 
     property Control exposeLogin: loginButton
     property bool failed
+    property string currentSessionName: sessionSelect.selectedSessionName
 
     // --- USERNAME ---
     RowLayout {
