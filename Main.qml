@@ -18,11 +18,29 @@ Pane {
     font.family: terminalFont.name
     font.pointSize: config.FontSize
 
-    // --- AUDIO SYSTEM (UPDATED TO WAV) ---
-    // WAV is strictly required for stability on the login screen
-    SoundEffect { id: soundKeypress; source: "Assets/Sounds/keypress.wav"; volume: 0.5 }
-    SoundEffect { id: soundAccessGranted; source: "Assets/Sounds/access_granted.wav"; volume: 0.8 }
-    SoundEffect { id: soundAccessDenied; source: "Assets/Sounds/access_denied.wav"; volume: 1.0 }
+    // --- AUDIO SYSTEM ---
+    SoundEffect { 
+        id: soundKeypress
+        source: Qt.resolvedUrl("Assets/Sounds/keypress.wav")
+        volume: 0.5 
+    }
+    SoundEffect { 
+        id: soundAccessGranted
+        source: Qt.resolvedUrl("Assets/Sounds/access_granted.wav")
+        volume: 1.0 
+    }
+    SoundEffect { 
+        id: soundAccessDenied
+        source: Qt.resolvedUrl("Assets/Sounds/access_denied.wav")
+        volume: 1.0 
+    }
+
+    // --- LOGIC: PLAY SOUNDS ON LOGIN EVENTS ---
+    Connections {
+        target: sddm
+        function onLoginSucceeded() { soundAccessGranted.play() }
+        function onLoginFailed() { soundAccessDenied.play() }
+    }
 
     Image {
         id: backgroundImage
@@ -32,7 +50,7 @@ Pane {
         z: 0
     }
 
-    // --- LEFT COLUMN (LOCKED) ---
+    // --- LEFT COLUMN ---
     ColumnLayout {
         id: leftPanel
         anchors.left: parent.left
@@ -48,7 +66,7 @@ Pane {
             Layout.fillWidth: true
             Layout.preferredHeight: 400
             
-            // Pass audio signal down to inputs
+            // Pass audio signal down to inputs for typing sounds
             property var soundEffect: soundKeypress 
         }
 
@@ -115,14 +133,12 @@ Pane {
             Layout.alignment: Qt.AlignLeft
             Text { text: ">REACTOR_CORE_STATUS:"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
             
-            // The Power Bar
             Row {
                 spacing: 2
                 Repeater {
                     model: 20
                     Rectangle {
                         width: 15; height: 25
-                        // Last few bars dim to simulate fluctuation
                         color: index < 18 ? "white" : "#444" 
                     }
                 }
@@ -164,7 +180,6 @@ Pane {
             RowLayout {
                 spacing: 10
                 Text { text: "INPUT_NODE:"; color: "white"; font.family: terminalFont.name; font.bold: true }
-                // SAFE CHECK to prevent crash if layout list is empty
                 Text { 
                     text: keyboard.layouts && keyboard.layouts.length > 0 ? "[" + keyboard.layouts[keyboard.currentLayout].toString().toUpperCase() + "]" : "[STD_INPUT]"
                     color: "white"; font.family: terminalFont.name; font.bold: true 
@@ -181,7 +196,7 @@ Pane {
         Item { Layout.fillHeight: true }
     }
 
-    // --- FOOTER (Pinned) ---
+    // --- FOOTER ---
     Text {
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
