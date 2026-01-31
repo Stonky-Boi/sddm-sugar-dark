@@ -11,6 +11,7 @@ Pane {
     // Load Custom Font
     FontLoader { id: terminalFont; source: "Assets/Fonts/ShareTechMono-Regular.ttf" }
 
+    // Force global white text
     palette.text: "white"
     palette.buttonText: "white"
     palette.window: "transparent"
@@ -26,7 +27,7 @@ Pane {
         z: 0
     }
 
-    // --- LEFT COLUMN: LOGIN & LOGS ---
+    // --- LEFT COLUMN: LOGIN & CONTROLS ---
     ColumnLayout {
         id: leftPanel
         anchors.left: parent.left
@@ -37,7 +38,7 @@ Pane {
         spacing: 10
         width: parent.width * 0.45
 
-        // Header - Trying to match the wide spacing of the reference
+        // Header
         Text {
             text: "W E Y L A N D  -  Y U T A N I"
             color: "white"
@@ -46,7 +47,6 @@ Pane {
             font.pointSize: 28
             font.letterSpacing: 2
         }
-
         Text {
             text: "PERSONAL-TERMINAL-ACCESS-INTERFACE"
             color: "white"
@@ -55,7 +55,6 @@ Pane {
             font.pointSize: 18
             opacity: 0.8
         }
-
         Text {
             text: "**********************************************"
             color: "white"
@@ -63,32 +62,46 @@ Pane {
             font.bold: true
         }
         
-        Item { height: 30; width: 1 } // Spacer before login
+        Item { height: 20; width: 1 } 
 
-        // Login Form
+        // LOGIN FORM (Username/Password/Session)
         LoginForm {
             id: form
             Layout.fillWidth: true
-            Layout.preferredHeight: 200
+            Layout.preferredHeight: 250 // Increased height to fit Session/Show Pass
         }
 
-        // Fake Terminal Logs
+        // STATIC LORE TEXT (Visuals only)
         Column {
             spacing: 5
+            Layout.topMargin: 0
+            
             Text { text: "[ACCESSING PTAI SYSTEM...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: "[LOADING USER PROFILE...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
-            Text { text: "[AUTHENTICATION REQUIRED]"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true } // Green Accent
+            Text { text: "[AUTHENTICATION STANDBY]"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
             
-            Item { height: 20; width: 1 } 
+            Item { height: 15; width: 1 }
+
+            Text { text: "[INITIALIZING DATA ACCESS...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
+            Text { text: "[RETRIEVING INFORMATION...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
             
+            Item { height: 15; width: 1 }
+
             Text { text: ">CMD:/access quick"; color: "white"; font.family: terminalFont.name; font.bold: true }
             Text { text: ">[DISPLAYING LOCAL QUICK ACCESS://]"; color: "white"; font.family: terminalFont.name; font.bold: true }
         }
         
-        Item { Layout.fillHeight: true }
+        Item { Layout.fillHeight: true } // Push Power Buttons to bottom
+
+        // POWER CONTROLS (Bottom Left)
+        SystemButtons {
+            id: systemButtons
+            Layout.alignment: Qt.AlignLeft
+            Layout.preferredHeight: 50
+        }
     }
 
-    // --- RIGHT COLUMN: LORE & UPDATES ---
+    // --- RIGHT COLUMN: REMINDERS, CLOCK & UPDATES ---
     ColumnLayout {
         id: rightPanel
         anchors.right: parent.right
@@ -97,9 +110,9 @@ Pane {
         anchors.rightMargin: config.ScreenPadding
         anchors.topMargin: config.ScreenPadding
         width: parent.width * 0.4
-        spacing: 40
+        spacing: 30
 
-        // Reminder Block (Top Right)
+        // Reminder Block
         Column {
             spacing: 5
             Text { 
@@ -133,10 +146,50 @@ Pane {
             }
         }
         
-        // Spacer to push "Important Update" to the middle-ish
-        Item { height: 100; width: 1 } 
+        Item { Layout.fillHeight: true } // Spacer
 
-        // Important Update (Middle Right)
+        // --- CLOCK (Positioned before Important Update) ---
+        Column {
+            spacing: 5
+            Layout.alignment: Qt.AlignLeft
+            
+            Text {
+                text: ">SYSTEM TIME:"
+                color: "#33ff00"
+                font.family: terminalFont.name
+                font.bold: true
+                font.pointSize: 14
+            }
+            Text {
+                id: timeDisplay
+                font.family: terminalFont.name
+                font.bold: true
+                font.pointSize: 48 // Big Digital Clock
+                color: "white"
+                
+                function updateTime() {
+                    text = Qt.formatDateTime(new Date(), "HH:mm:ss")
+                }
+                
+                Timer {
+                    interval: 1000; running: true; repeat: true
+                    onTriggered: parent.updateTime()
+                }
+                Component.onCompleted: updateTime()
+            }
+            Text {
+                text: Qt.formatDateTime(new Date(), "dddd, yyyy-MM-dd")
+                font.family: terminalFont.name
+                font.bold: true
+                font.pointSize: 18
+                color: "white"
+                opacity: 0.8
+            }
+        }
+
+        Item { height: 20; width: 1 }
+
+        // Important Update (LV-410)
         Column {
             spacing: 10
             Text { 
@@ -153,7 +206,7 @@ Pane {
                 color: "white"
                 font.family: terminalFont.name
                 font.bold: true
-                font.pointSize: 14 // Slightly smaller for body text
+                font.pointSize: 14 
             }
             Text { 
                 width: parent.parent.width

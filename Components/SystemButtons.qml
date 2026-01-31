@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.4
 
 RowLayout {
-    spacing: 20
+    spacing: 30
     Layout.alignment: Qt.AlignLeft
 
     property var suspend: ["[SUSPEND]", config.TranslateSuspend, sddm.canSuspend]
@@ -19,13 +19,14 @@ RowLayout {
         Button {
             text: modelData[0]
             visible: modelData[2]
+            hoverEnabled: true
             
             contentItem: Text {
                 text: parent.text
                 font.family: root.font.family
                 font.pointSize: root.font.pointSize
                 font.bold: true 
-                // Force White, Green on hover
+                // INTERACTIVITY: White by default, Green when mouse hovers
                 color: parent.hovered ? "#33ff00" : "white"
             }
 

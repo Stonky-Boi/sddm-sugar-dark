@@ -12,7 +12,7 @@ Column {
 
     // --- USERNAME ---
     RowLayout {
-        spacing: 0 // Tight spacing for the bracket look
+        spacing: 0 
         Layout.fillWidth: true
 
         Text {
@@ -23,43 +23,25 @@ Column {
             font.bold: true
             Layout.rightMargin: 10
         }
-
-        Text { 
-            text: "[" 
-            color: "white" 
-            font.family: root.font.family
-            font.pointSize: root.font.pointSize 
-            font.bold: true
-        }
-
+        Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
+        
         TextField {
             id: username
-            Layout.preferredWidth: 250 // Fixed width for terminal look
+            Layout.preferredWidth: 250
             Layout.fillWidth: false
             text: config.ForceLastUser == "true" ? userModel.lastUser : ""
-            
-            // REMOVED capitalization
             font.family: root.font.family
             font.pointSize: root.font.pointSize
             font.bold: true
-            
             color: "white" 
-            
-            placeholderText: "" // Removed placeholder to look cleaner
             horizontalAlignment: TextInput.AlignLeft
             background: Rectangle { color: "transparent" }
-
+            
             Keys.onReturnPressed: loginButton.clicked()
             KeyNavigation.down: password
         }
-
-        Text { 
-            text: "]" 
-            color: "white" 
-            font.family: root.font.family
-            font.pointSize: root.font.pointSize 
-            font.bold: true
-        }
+        
+        Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
     // --- PASSWORD ---
@@ -75,40 +57,53 @@ Column {
             font.bold: true
             Layout.rightMargin: 10
         }
-
-        Text { 
-            text: "[" 
-            color: "white" 
-            font.family: root.font.family
-            font.pointSize: root.font.pointSize 
-            font.bold: true
-        }
-
+        Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
+        
         TextField {
             id: password
             Layout.preferredWidth: 250
             Layout.fillWidth: false
             focus: config.ForcePasswordFocus == "true"
-            echoMode: TextInput.Password
+            echoMode: revealSecret.checked ? TextInput.Normal : TextInput.Password
             passwordCharacter: "*"
             font.family: root.font.family
             font.pointSize: root.font.pointSize
             font.bold: true
-            
             color: "white"
-            
             horizontalAlignment: TextInput.AlignLeft
             background: Rectangle { color: "transparent" }
-
+            
             Keys.onReturnPressed: loginButton.clicked()
         }
+        
+        Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
+    }
 
-        Text { 
-            text: "]" 
-            color: "white" 
-            font.family: root.font.family
-            font.pointSize: root.font.pointSize 
-            font.bold: true
+    // --- CONTROLS ROW (Show Password + Session) ---
+    RowLayout {
+        spacing: 20
+        Layout.topMargin: 5
+        Layout.leftMargin: 105 // Aligns with the input boxes visually
+
+        // Show Password Toggle
+        CheckBox {
+            id: revealSecret
+            hoverEnabled: true
+            
+            indicator: Text {
+                text: parent.checked ? "[X] SHOW" : "[ ] SHOW"
+                font.family: root.font.family
+                font.pointSize: root.font.pointSize * 0.9
+                font.bold: true
+                color: parent.hovered ? "#33ff00" : "white" // Turns green on hover
+            }
+            contentItem: Item {} // Hide standard text
+        }
+
+        // Session Selector (e.g. Hyprland/Plasma)
+        SessionButton {
+            id: sessionSelect
+            textConstantSession: textConstants.session
         }
     }
 
@@ -121,18 +116,12 @@ Column {
         font.bold: true
         font.pointSize: 16
         visible: failed
+        Layout.topMargin: 10
     }
 
     Button {
         id: loginButton
         visible: false
         onClicked: sddm.login(username.text, password.text, sessionSelect.selectedSession)
-    }
-
-    // --- SESSION SELECT ---
-    SessionButton {
-        id: sessionSelect
-        textConstantSession: textConstants.session
-        Layout.topMargin: 20
     }
 }
