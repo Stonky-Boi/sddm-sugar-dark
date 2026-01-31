@@ -14,8 +14,17 @@ Column {
     RowLayout {
         spacing: 0 
         Layout.fillWidth: true
-        Text { text: "LOGIN:   "; color: "white"; font.family: root.font.family; font.pointSize: root.font.pointSize; font.bold: true; Layout.rightMargin: 10 }
+
+        Text {
+            text: "LOGIN:   "
+            color: "white" 
+            font.family: root.font.family
+            font.pointSize: root.font.pointSize
+            font.bold: true
+            Layout.rightMargin: 10
+        }
         Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
+        
         TextField {
             id: username
             Layout.preferredWidth: 250
@@ -27,9 +36,11 @@ Column {
             color: "white" 
             horizontalAlignment: TextInput.AlignLeft
             background: Rectangle { color: "transparent" }
+            
             Keys.onReturnPressed: loginButton.clicked()
             KeyNavigation.down: password
         }
+        
         Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
@@ -37,8 +48,17 @@ Column {
     RowLayout {
         spacing: 0
         Layout.fillWidth: true
-        Text { text: "PASSWORD:"; color: "white"; font.family: root.font.family; font.pointSize: root.font.pointSize; font.bold: true; Layout.rightMargin: 10 }
+
+        Text {
+            text: "PASSWORD:"
+            color: "white" 
+            font.family: root.font.family
+            font.pointSize: root.font.pointSize
+            font.bold: true
+            Layout.rightMargin: 10
+        }
         Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
+        
         TextField {
             id: password
             Layout.preferredWidth: 250
@@ -52,24 +72,39 @@ Column {
             color: "white"
             horizontalAlignment: TextInput.AlignLeft
             background: Rectangle { color: "transparent" }
+            
             Keys.onReturnPressed: loginButton.clicked()
         }
+        
         Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
-    // --- SHOW PASSWORD TOGGLE (Moved left slightly to align) ---
-    CheckBox {
-        id: revealSecret
-        hoverEnabled: true
-        Layout.leftMargin: 105
-        indicator: Text {
-            text: parent.checked ? "[X] SHOW" : "[ ] SHOW"
-            font.family: root.font.family
-            font.pointSize: root.font.pointSize * 0.9
-            font.bold: true
-            color: parent.hovered ? "#33ff00" : "white"
+    // --- CONTROLS ROW (Show Password + Session) ---
+    RowLayout {
+        spacing: 20
+        Layout.topMargin: 5
+        Layout.leftMargin: 105 // Aligns with the input boxes visually
+
+        // Show Password Toggle
+        CheckBox {
+            id: revealSecret
+            hoverEnabled: true
+            
+            indicator: Text {
+                text: parent.checked ? "[X] SHOW" : "[ ] SHOW"
+                font.family: root.font.family
+                font.pointSize: root.font.pointSize * 0.9
+                font.bold: true
+                color: parent.hovered ? "#33ff00" : "white" // Turns green on hover
+            }
+            contentItem: Item {} // Hide standard text
         }
-        contentItem: Item {} 
+
+        // Session Selector (e.g. Hyprland/Plasma)
+        SessionButton {
+            id: sessionSelect
+            textConstantSession: textConstants.session
+        }
     }
 
     // --- ERROR MESSAGE ---
@@ -84,11 +119,9 @@ Column {
         Layout.topMargin: 10
     }
 
-    // --- HIDDEN BUTTON ---
-    // Note: We use 'root.sessionIndex' which we aliased in Main.qml
     Button {
         id: loginButton
         visible: false
-        onClicked: sddm.login(username.text, password.text, root.sessionIndex)
+        onClicked: sddm.login(username.text, password.text, sessionSelect.selectedSession)
     }
 }

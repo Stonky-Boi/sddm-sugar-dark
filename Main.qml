@@ -8,11 +8,10 @@ Pane {
     height: config.ScreenHeight || Screen.height
     width: config.ScreenWidth || Screen.width
 
-    // Expose the Right Panel's session selection to the Login Form
-    property alias sessionIndex: rightPanelSessionSelect.selectedSession
-
+    // Load Custom Font
     FontLoader { id: terminalFont; source: "Assets/Fonts/ShareTechMono-Regular.ttf" }
 
+    // Force global white text
     palette.text: "white"
     palette.buttonText: "white"
     palette.window: "transparent"
@@ -28,26 +27,51 @@ Pane {
         z: 0
     }
 
-    // --- LEFT COLUMN: LOGIN ONLY ---
+    // --- LEFT COLUMN: LOGIN & CONTROLS ---
     ColumnLayout {
         id: leftPanel
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.leftMargin: 100 // Adjusted as per your previous preference
+        
+        anchors.leftMargin: 50
+        
+        // Top Margin to clear the vertical space of the logo
         anchors.topMargin: 150 
+        
         spacing: 10
         width: parent.width * 0.45
 
+        // LOGIN FORM
         LoginForm {
             id: form
             Layout.fillWidth: true
-            Layout.preferredHeight: 200
-            // Pass the root session index to the form
-            // (We will update LoginForm to use this)
+            Layout.preferredHeight: 250
         }
 
+        // Spacer to separate Login from Bottom Text
         Item { height: 80; width: 1 } 
+
+        // LORE TEXT (Fake Terminal Logs)
+        Column {
+            spacing: 5
+            
+            Text { text: "[ACCESSING PTAI SYSTEM...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
+            Text { text: "[LOADING USER PROFILE...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
+            Text { text: "[AUTHENTICATION STANDBY]"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
+            
+            Item { height: 15; width: 1 }
+
+            Text { text: "[INITIALIZING DATA ACCESS...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
+            Text { text: "[RETRIEVING INFORMATION...]"; color: "white"; font.family: terminalFont.name; font.bold: true }
+            
+            Item { height: 15; width: 1 }
+
+            Text { text: ">CMD:/access quick"; color: "white"; font.family: terminalFont.name; font.bold: true }
+            Text { text: ">[DISPLAYING LOCAL QUICK ACCESS://]"; color: "white"; font.family: terminalFont.name; font.bold: true }
+        }
+        
+        Item { Layout.fillHeight: true } // Push Power Buttons to bottom
 
         // POWER CONTROLS
         SystemButtons {
@@ -60,40 +84,77 @@ Pane {
         }
     }
 
-    // --- RIGHT COLUMN: DASHBOARD ---
+    // --- RIGHT COLUMN: REMINDERS, CLOCK & UPDATES ---
     ColumnLayout {
         id: rightPanel
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.rightMargin: 100
-        anchors.topMargin: 150
+        anchors.rightMargin: config.ScreenPadding
+        anchors.topMargin: config.ScreenPadding
         width: parent.width * 0.4
-        spacing: 40
+        spacing: 30
 
-        // 1. CLOCK WIDGET
+        // Reminder Block
         Column {
-            spacing: 0
+            spacing: 5
+            Text { 
+                text: ">WYC REMINDER: SAFETY SECOND! PROFIT FIRST!"
+                color: "white" 
+                font.family: terminalFont.name
+                font.bold: true
+            }
+            Text { 
+                text: "[00]D [00]H [00]M [19]S since last accident"
+                color: "white" 
+                font.family: terminalFont.name
+                font.bold: true
+            }
+        }
+
+        // Vacation Timer
+        Column {
+            spacing: 5
+            Text { 
+                text: ">Remaining Work Time Till Yvaga III Vacation"
+                color: "white"
+                font.family: terminalFont.name
+                font.bold: true
+            }
+            Text { 
+                text: "[28489]D [21]H [5]M [5]S"
+                color: "white"
+                font.family: terminalFont.name
+                font.bold: true
+            }
+        }
+        
+        Item { Layout.fillHeight: true } 
+
+        // --- CLOCK ---
+        Column {
+            spacing: 5
+            Layout.alignment: Qt.AlignLeft
+            
             Text {
-                text: "> SYSTEM_TIME"
+                text: ">SYSTEM TIME:"
                 color: "#33ff00"
                 font.family: terminalFont.name
                 font.bold: true
                 font.pointSize: 14
             }
             Text {
+                id: timeDisplay
                 font.family: terminalFont.name
                 font.bold: true
-                font.pointSize: 64
+                font.pointSize: 48 
                 color: "white"
-                style: Text.Outline; styleColor: "black" // Slight contrast
-                
-                function updateTime() { text = Qt.formatDateTime(new Date(), "HH:mm") }
+                function updateTime() { text = Qt.formatDateTime(new Date(), "HH:mm:ss") }
                 Timer { interval: 1000; running: true; repeat: true; onTriggered: parent.updateTime() }
                 Component.onCompleted: updateTime()
             }
             Text {
-                text: Qt.formatDateTime(new Date(), "dddd, MMMM d, yyyy").toUpperCase()
+                text: Qt.formatDateTime(new Date(), "dddd, yyyy-MM-dd")
                 font.family: terminalFont.name
                 font.bold: true
                 font.pointSize: 18
@@ -102,97 +163,59 @@ Pane {
             }
         }
 
-        // 2. CALENDAR WIDGET
+        Item { height: 20; width: 1 }
+
+        // Important Update
         Column {
             spacing: 10
-            Text {
-                text: "> CALENDAR_MODULE [" + Qt.formatDateTime(new Date(), "MM-yyyy") + "]"
+            Text { 
+                text: ">>IMPORTANT UPDATE<<"
                 color: "#33ff00"
                 font.family: terminalFont.name
                 font.bold: true
-                font.pointSize: 14
+                font.pointSize: 20
             }
-
-            // Simple Grid for Calendar
-            GridLayout {
-                columns: 7
-                columnSpacing: 15
-                rowSpacing: 10
-
-                // Days Header
-                Repeater {
-                    model: ["SU", "MO", "TU", "WE", "TH", "FR", "SA"]
-                    Text { text: modelData; color: "#33ff00"; font.bold: true; font.family: terminalFont.name; font.pointSize: 14 }
-                }
-
-                // Days Generator
-                Repeater {
-                    model: 31 
-                    Text {
-                        // Quick logic to dim days not in month (simplified for aesthetics)
-                        // A full JS calendar is complex in pure QML, this is a static visual representation
-                        // In a real Qt environment we'd bind this to a C++ model, but for SDDM themes:
-                        property var date: new Date()
-                        property int today: date.getDate()
-                        
-                        text: (index + 1).toString().padStart(2, '0')
-                        color: (index + 1) === today ? "#33ff00" : "white"
-                        font.family: terminalFont.name
-                        font.pointSize: 14
-                        font.bold: (index + 1) === today
-                        
-                        // Simple toggle to highlight today
-                        Rectangle {
-                            anchors.fill: parent
-                            color: "transparent"
-                            border.color: (index + 1) === today ? "#33ff00" : "transparent"
-                            border.width: 1
-                        }
-                    }
-                }
-            }
-        }
-
-        // 3. ENVIRONMENT SELECTOR (Moved from Left)
-        Column {
-            spacing: 5
-            Text {
-                text: "> TARGET_ENVIRONMENT"
-                color: "#33ff00"
-                font.family: terminalFont.name
-                font.bold: true
-                font.pointSize: 14
-            }
-            
-            // We place the session button here now
-            SessionButton {
-                id: rightPanelSessionSelect
-                textConstantSession: "SESSION"
-                width: parent.width
-                
-                // Style it to look like a terminal entry
-                anchors.left: parent.left
-            }
-            
-            Text {
-                text: "[SELECT DE/WM FOR INITIALIZATION]"
+            Text { 
+                width: parent.parent.width
+                wrapMode: Text.WordWrap
+                text: "ORBITAL MINERAL HARVESTING OVER LV-410\nHALTED UNTIL FURTHER NOTICE DUE TO UNKNOWN\nDEBRIS FIELD NEAR OPERATION AREA."
                 color: "white"
                 font.family: terminalFont.name
-                font.pointSize: 12
-                opacity: 0.6
-                Layout.topMargin: 5
+                font.bold: true
+                font.pointSize: 14 
+            }
+            Text { 
+                width: parent.parent.width
+                wrapMode: Text.WordWrap
+                text: "THE SPREAD OF RUMORS OF ROGUE PERSONNEL ARE\nBASELESS."
+                color: "white"
+                font.family: terminalFont.name
+                font.bold: true
+                font.pointSize: 14
+            }
+            Text { 
+                width: parent.parent.width
+                wrapMode: Text.WordWrap
+                text: "AIR CURFEW IS IN EFFECT.\nHAULERS OVER 50000FT WILL BE TARGETED BY\nDEFENSE SYSTEMS."
+                color: "white"
+                font.family: terminalFont.name
+                font.bold: true
+                font.pointSize: 14
             }
         }
-
-        Item { Layout.fillHeight: true }
         
-        // FOOTER
-        Text {
-            text: "(C) SM-LINK DATA SYSTEMS"
-            color: "white"
-            font.family: terminalFont.name
-            font.bold: true
-            opacity: 0.5
-        }
+        Item { Layout.fillHeight: true }
+    }
+
+    // --- FOOTER ---
+    Text {
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottomMargin: 20
+        text: "(C) SM-LINK DATA SYSTEMS"
+        color: "white"
+        font.family: terminalFont.name
+        font.bold: true
+        opacity: 0.8
     }
 }
