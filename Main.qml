@@ -4,6 +4,11 @@ import QtQuick.Controls 2.4
 import "Components"
 
 Pane {
+    opacity: 0
+    SequentialAnimation on opacity {
+        NumberAnimation { to: 1; duration: 1500; easing.type: Easing.InOutQuad }
+    }
+
     id: root
     height: config.ScreenHeight || Screen.height
     width: config.ScreenWidth || Screen.width
