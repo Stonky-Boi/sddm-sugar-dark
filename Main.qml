@@ -33,9 +33,11 @@ Pane {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.leftMargin: config.ScreenPadding
         
-        // --- CHANGE 1: Reduced margin to 150 to pull Login UP closer to Logo ---
+        // --- CHANGE: Increased Left Margin to 150 to align with Logo ---
+        anchors.leftMargin: 150
+        
+        // Top Margin to clear the vertical space of the logo
         anchors.topMargin: 150 
         
         spacing: 10
@@ -48,7 +50,7 @@ Pane {
             Layout.preferredHeight: 250
         }
 
-        // --- CHANGE 2: Big Spacer to separate Login from Bottom Text ---
+        // Spacer to separate Login from Bottom Text
         Item { height: 80; width: 1 } 
 
         // LORE TEXT (Fake Terminal Logs)
