@@ -11,10 +11,13 @@ Column {
     property bool failed
     property alias sessionName: sessionSelect.currentSessionName
 
-    // --- USERNAME ---
+    // --- USERNAME (Layer 200 - Highest Priority) ---
     RowLayout {
         spacing: 0 
         Layout.fillWidth: true
+        // CRITICAL FIX: High Z-index ensures the dropdown covers everything below it
+        z: 200 
+        
         Text {
             text: "LOGIN:   "
             color: "white"; font.family: root.font.family; font.pointSize: root.font.pointSize; font.bold: true
@@ -57,10 +60,12 @@ Column {
         Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
-    // --- PASSWORD ---
+    // --- PASSWORD (Layer 100) ---
     RowLayout {
         spacing: 0
         Layout.fillWidth: true
+        z: 100
+        
         Text {
             text: "PASSWORD:"
             color: "white"; font.family: root.font.family; font.pointSize: root.font.pointSize; font.bold: true
@@ -83,12 +88,13 @@ Column {
         Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
-    // --- CONTROLS STACK ---
+    // --- CONTROLS STACK (Layer 1) ---
 
     // 1. Show Password
     RowLayout {
         Layout.topMargin: 5
         Layout.leftMargin: 105 
+        z: 1
         CheckBox {
             id: revealSecret
             hoverEnabled: true
@@ -105,6 +111,7 @@ Column {
     RowLayout {
         Layout.topMargin: 0
         Layout.leftMargin: 105 
+        z: 1
         Button {
             text: "[ KEYBOARD ]"
             hoverEnabled: true
@@ -125,9 +132,19 @@ Column {
     RowLayout {
         Layout.topMargin: 0
         Layout.leftMargin: 105 
-        SessionButton {
-            id: sessionSelect
-            textConstantSession: textConstants.session
+        z: 1
+        
+        // Wrap in Item to ensure it takes proper space in the layout
+        Item {
+            width: childrenRect.width
+            height: childrenRect.height
+            SessionButton {
+                id: sessionSelect
+                textConstantSession: textConstants.session
+                anchors.left: parent.left
+                // Remove centering to respect the RowLayout
+                anchors.horizontalCenter: undefined 
+            }
         }
     }
 

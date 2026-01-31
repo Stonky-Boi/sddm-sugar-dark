@@ -39,8 +39,7 @@ Pane {
         LoginForm {
             id: form
             Layout.fillWidth: true
-            // Increased to 380 to fit the 3-row stack safely
-            Layout.preferredHeight: 380
+            Layout.preferredHeight: 400
         }
 
         Item { height: 30; width: 1 } 

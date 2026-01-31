@@ -5,8 +5,11 @@ import QtGraphicalEffects 1.0
 Item {
     id: sessionButton
     height: root.font.pointSize
-    width: parent.width / 2
-    anchors.horizontalCenter: parent.horizontalCenter
+    // Use implicit width so Layouts know how big we are
+    width: childrenRect.width 
+    
+    // REMOVED: anchors.horizontalCenter: parent.horizontalCenter
+    // This allows Input.qml to align it to the left (under the [ brackets)
 
     property var selectedSession: selectSession.currentIndex
     property string textConstantSession
@@ -20,14 +23,12 @@ Item {
         currentIndex: model.lastIndex
         textRole: "name"
 
-        // The Dropdown List Item
         delegate: ItemDelegate {
             width: parent.width
             anchors.horizontalCenter: parent.horizontalCenter
             contentItem: Text {
                 text: model.name
                 font.pointSize: root.font.pointSize * 0.8
-                // Highlight logic
                 color: selectSession.highlightedIndex === index ? "black" : "white"
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
@@ -42,13 +43,12 @@ Item {
 
         indicator: Item { visible: false }
 
-        // --- THE MAIN BUTTON LABEL ---
         contentItem: Text {
             id: displayedItem
-            // FORMAT: [ SESSION: HYPRLAND ]
+            // Text Format: [ SESSION: PLASMA ]
             text: "[ SESSION: " + (selectSession.currentText ? selectSession.currentText.toUpperCase() : "DEFAULT") + " ]"
             
-            color: parent.hovered ? "#33ff00" : "white" // Green on hover
+            color: parent.hovered ? "#33ff00" : "white"
             verticalAlignment: Text.AlignVCenter
             anchors.left: parent.left
             font.pointSize: root.font.pointSize * 0.8
@@ -56,10 +56,7 @@ Item {
             font.bold: true
         }
 
-        background: Rectangle {
-            color: "transparent"
-            border.width: 0
-        }
+        background: Rectangle { color: "transparent" }
 
         popup: Popup {
             y: parent.height
