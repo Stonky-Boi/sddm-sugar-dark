@@ -24,9 +24,9 @@ RowLayout {
                 text: parent.text
                 font.family: root.font.family
                 font.pointSize: root.font.pointSize
-                font.bold: true // Bold for visibility
-                // White by default, Green on hover
-                color: parent.hovered ? config.AccentColor : config.MainColor
+                font.bold: true 
+                // Force White, Green on hover
+                color: parent.hovered ? "#33ff00" : "white"
             }
 
             background: Rectangle { color: "transparent" }

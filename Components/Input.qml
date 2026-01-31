@@ -17,15 +17,13 @@ Column {
 
         Text {
             text: "LOGIN:   "
-            // Force bright green
-            color: "#55ff55" 
+            color: "white" // Force White
             font.family: root.font.family
             font.pointSize: root.font.pointSize
             font.bold: true
-            style: Text.Outline; styleColor: "black"
         }
 
-        Text { text: "["; color: "#55ff55"; font.pointSize: root.font.pointSize; font.bold: true }
+        Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
 
         TextField {
             id: username
@@ -36,19 +34,18 @@ Column {
             font.pointSize: root.font.pointSize
             font.bold: true
             
-            // Text color inside the box (Input text should be White for max readability)
+            // Text color inside the box
             color: "white" 
             
             placeholderText: "IDENTITY"
             horizontalAlignment: TextInput.AlignLeft
-            
             background: Rectangle { color: "transparent" }
 
             Keys.onReturnPressed: loginButton.clicked()
             KeyNavigation.down: password
         }
 
-        Text { text: "]"; color: "#55ff55"; font.pointSize: root.font.pointSize; font.bold: true }
+        Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
     // --- PASSWORD ---
@@ -58,14 +55,13 @@ Column {
 
         Text {
             text: "PASSWORD:"
-            color: "#55ff55"
+            color: "white" // Force White
             font.family: root.font.family
             font.pointSize: root.font.pointSize
             font.bold: true
-            style: Text.Outline; styleColor: "black"
         }
 
-        Text { text: "["; color: "#55ff55"; font.pointSize: root.font.pointSize; font.bold: true }
+        Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
 
         TextField {
             id: password
@@ -86,18 +82,17 @@ Column {
             Keys.onReturnPressed: loginButton.clicked()
         }
 
-        Text { text: "]"; color: "#55ff55"; font.pointSize: root.font.pointSize; font.bold: true }
+        Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
     // --- ERROR MESSAGE ---
     Text {
         id: errorMessage
         text: failed ? config.TranslateLoginFailedWarning : ""
-        color: "#ff3333" // Bright Red
+        color: "#ff3333" // Bright Red for error
         font.family: root.font.family
         font.bold: true
         font.pointSize: 16
-        style: Text.Outline; styleColor: "black"
         visible: failed
     }
 
