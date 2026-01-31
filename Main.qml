@@ -1,231 +1,173 @@
-//
-// This file is part of Sugar Dark, a theme for the Simple Display Desktop Manager.
-//
-// Copyright 2018 Marian Arlt
-//
-// Sugar Dark is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Sugar Dark is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Sugar Dark. If not, see <https://www.gnu.org/licenses/>.
-//
-
 import QtQuick 2.11
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.4
-import QtGraphicalEffects 1.0
 import "Components"
 
 Pane {
     id: root
-
     height: config.ScreenHeight || Screen.height
-    width: config.ScreenWidth || Screen.ScreenWidth
+    width: config.ScreenWidth || Screen.width
 
-    LayoutMirroring.enabled: config.ForceRightToLeft == "true" ? true : Qt.application.layoutDirection === Qt.RightToLeft
-    LayoutMirroring.childrenInherit: true
+    // Load Custom Font
+    FontLoader { id: terminalFont; source: "Assets/Fonts/ShareTechMono-Regular.ttf" }
 
-    padding: config.ScreenPadding
     palette.button: "transparent"
     palette.highlight: config.AccentColor
     palette.text: config.MainColor
     palette.buttonText: config.MainColor
-    palette.window: "#444"
+    palette.window: "transparent"
 
-    font.family: config.Font
-    font.pointSize: config.FontSize !== "" ? config.FontSize : parseInt(height / 80)
-    focus: true
+    font.family: terminalFont.name
+    font.pointSize: config.FontSize
 
-    property bool leftleft: config.HaveFormBackground == "true" &&
-                            config.PartialBlur == "false" &&
-                            config.FormPosition == "left" &&
-                            config.BackgroundImageAlignment == "left"
-
-    property bool leftcenter: config.HaveFormBackground == "true" &&
-                              config.PartialBlur == "false" &&
-                              config.FormPosition == "left" &&
-                              config.BackgroundImageAlignment == "center"
-
-    property bool rightright: config.HaveFormBackground == "true" &&
-                              config.PartialBlur == "false" &&
-                              config.FormPosition == "right" &&
-                              config.BackgroundImageAlignment == "right"
-
-    property bool rightcenter: config.HaveFormBackground == "true" &&
-                               config.PartialBlur == "false" &&
-                               config.FormPosition == "right" &&
-                               config.BackgroundImageAlignment == "center"
-
-    Item {
-        id: sizeHelper
-
+    // Background
+    Image {
+        id: backgroundImage
         anchors.fill: parent
-        height: parent.height
-        width: parent.width
+        source: config.Background
+        fillMode: Image.PreserveAspectCrop
+        z: 0
+    }
 
-        Rectangle {
-            id: formBackground
-            anchors.fill: form
-            anchors.centerIn: form
-            color: "#444"
-            opacity: config.PartialBlur == "true" ? 0.3 : 1
-            z: 1
+    // --- LEFT COLUMN: LOGIN & LOGS ---
+    ColumnLayout {
+        id: leftPanel
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: config.ScreenPadding
+        anchors.topMargin: config.ScreenPadding
+        spacing: 20
+        width: parent.width * 0.45
+
+        // Header Logo Text
+        Text {
+            text: "WEYLAND-YUTANI\nPERSONAL-TERMINAL-ACCESS-INTERFACE"
+            color: config.MainColor
+            font.family: terminalFont.name
+            font.bold: true
+            font.pointSize: 24
+            lineHeight: 1.2
         }
 
+        Text {
+            text: "**********************************************"
+            color: config.MainColor
+            font.family: terminalFont.name
+        }
+
+        // Login Form (Username/Pass)
         LoginForm {
             id: form
-
-            height: virtualKeyboard.state == "visible" ? parent.height - virtualKeyboard.implicitHeight : parent.height
-            width: parent.width / 2.5
-            anchors.horizontalCenter: config.FormPosition == "center" ? parent.horizontalCenter : undefined
-            anchors.left: config.FormPosition == "left" ? parent.left : undefined
-            anchors.right: config.FormPosition == "right" ? parent.right : undefined
-            virtualKeyboardActive: virtualKeyboard.state == "visible" ? true : false
-            z: 1
+            Layout.fillWidth: true
+            Layout.preferredHeight: 300
         }
 
-        Button {
-            id: vkb
-            onClicked: virtualKeyboard.switchState()
-            visible: virtualKeyboard.status == Loader.Ready && config.ForceHideVirtualKeyboardButton == "false"
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: implicitHeight
-            anchors.horizontalCenter: form.horizontalCenter
-            z: 1
-            contentItem: Text {
-                text: config.TranslateVirtualKeyboardButton || "Virtual Keyboard"
-                color: parent.visualFocus ? palette.highlight : palette.text
-                font.pointSize: root.font.pointSize * 0.8
+        // Fake Terminal Boot Sequence
+        Column {
+            spacing: 5
+            opacity: 0.8
+            Text { text: "[ACCESSING PTAI SYSTEM...]"; color: config.MainColor; font.family: terminalFont.name }
+            Text { text: "[LOADING USER PROFILE...]"; color: config.MainColor; font.family: terminalFont.name }
+            Text { text: "[AUTHENTICATION REQUIRED]"; color: config.AccentColor; font.family: terminalFont.name }
+            
+            Item { height: 20; width: 1 } 
+            
+            Text { text: ">CMD:/access quick"; color: config.MainColor; font.family: terminalFont.name; opacity: 0.7 }
+            Text { text: ">[DISPLAYING LOCAL QUICK ACCESS://]"; color: config.MainColor; font.family: terminalFont.name; opacity: 0.7 }
+        }
+        
+        Item { Layout.fillHeight: true }
+    }
+
+    // --- RIGHT COLUMN: LORE & UPDATES ---
+    ColumnLayout {
+        id: rightPanel
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: config.ScreenPadding
+        anchors.topMargin: config.ScreenPadding
+        width: parent.width * 0.4
+        spacing: 40
+
+        // Safety Reminder
+        Column {
+            spacing: 5
+            Text { 
+                text: ">WYC REMINDER: SAFETY SECOND! PROFIT FIRST!"
+                color: config.AccentColor
+                font.family: terminalFont.name
+                font.bold: true
             }
-            background: Rectangle {
-                id: vkbbg
-                color: "transparent"
+            Text { 
+                text: "[00]D [00]H [00]M [19]S since last accident"
+                color: config.MainColor
+                font.family: terminalFont.name
             }
         }
 
-        Loader {
-            id: virtualKeyboard
-            source: "Components/VirtualKeyboard.qml"
-            state: "hidden"
-            property bool keyboardActive: item ? item.active : false
-            onKeyboardActiveChanged: keyboardActive ? state = "visible" : state = "hidden"
-            width: parent.width
-            z: 1
-            function switchState() { state = state == "hidden" ? "visible" : "hidden" }
-            states: [
-                State {
-                    name: "visible"
-                    PropertyChanges {
-                        target: form
-                        systemButtonVisibility: false
-                        clockVisibility: false
-                    }
-                    PropertyChanges {
-                        target: virtualKeyboard
-                        y: root.height - virtualKeyboard.height
-                        opacity: 1
-                    }
-                },
-                State {
-                    name: "hidden"
-                    PropertyChanges {
-                        target: virtualKeyboard
-                        y: root.height - root.height/4
-                        opacity: 0
-                    }
-                }
-            ]
-            transitions: [
-                Transition {
-                    from: "hidden"
-                    to: "visible"
-                    SequentialAnimation {
-                        ScriptAction {
-                            script: {
-                                virtualKeyboard.item.activated = true;
-                                Qt.inputMethod.show();
-                            }
-                        }
-                        ParallelAnimation {
-                            NumberAnimation {
-                                target: virtualKeyboard
-                                property: "y"
-                                duration: 100
-                                easing.type: Easing.OutQuad
-                            }
-                            OpacityAnimator {
-                                target: virtualKeyboard
-                                duration: 100
-                                easing.type: Easing.OutQuad
-                            }
-                        }
-                    }
-                },
-                Transition {
-                    from: "visible"
-                    to: "hidden"
-                    SequentialAnimation {
-                        ParallelAnimation {
-                            NumberAnimation {
-                                target: virtualKeyboard
-                                property: "y"
-                                duration: 100
-                                easing.type: Easing.InQuad
-                            }
-                            OpacityAnimator {
-                                target: virtualKeyboard
-                                duration: 100
-                                easing.type: Easing.InQuad
-                            }
-                        }
-                        ScriptAction {
-                            script: {
-                                Qt.inputMethod.hide();
-                            }
-                        }
-                    }
-                }
-            ]
+        // Vacation Timer
+        Column {
+            spacing: 5
+            Text { 
+                text: ">Remaining Work Time Till Yvaga III Vacation"
+                color: config.MainColor
+                font.family: terminalFont.name
+            }
+            Text { 
+                text: "[28489]D [21]H [5]M [5]S"
+                color: config.MainColor
+                font.family: terminalFont.name
+            }
         }
 
-        Image {
-            id: backgroundImage
+        Item { height: 100; width: 1 } 
 
-            height: parent.height
-            width: config.HaveFormBackground == "true" && config.FormPosition != "center" && config.PartialBlur != "true" ? parent.width - formBackground.width : parent.width
-            anchors.left: leftleft || 
-                          leftcenter ?
-                                formBackground.right : undefined
-
-            anchors.right: rightright ||
-                           rightcenter ?
-                                formBackground.left : undefined
-
-            horizontalAlignment: config.BackgroundImageAlignment == "left" ?
-                                 Image.AlignLeft :
-                                 config.BackgroundImageAlignment == "right" ?
-                                 Image.AlignRight :
-                                 config.BackgroundImageAlignment == "center" ?
-                                 Image.AlignHCenter : undefined
-
-            source: config.background || config.Background
-            fillMode: config.ScaleImageCropped == "true" ? Image.PreserveAspectCrop : Image.PreserveAspectFit
-            asynchronous: true
-            cache: true
-            clip: true
-            mipmap: true
+        // Important Update (LV-410)
+        Column {
+            spacing: 10
+            Text { 
+                text: ">>IMPORTANT UPDATE<<"
+                color: config.AccentColor
+                font.family: terminalFont.name
+                font.bold: true
+                font.pointSize: 18
+            }
+            Text { 
+                width: parent.parent.width
+                wrapMode: Text.WordWrap
+                text: "ORBITAL MINERAL HARVESTING OVER LV-410\nHALTED UNTIL FURTHER NOTICE DUE TO UNKNOWN\nDEBRIS FIELD NEAR OPERATION AREA."
+                color: config.MainColor
+                font.family: terminalFont.name
+            }
+            Text { 
+                width: parent.parent.width
+                wrapMode: Text.WordWrap
+                text: "THE SPREAD OF RUMORS OF ROGUE PERSONNEL ARE\nBASELESS."
+                color: config.MainColor
+                font.family: terminalFont.name
+            }
+            Text { 
+                width: parent.parent.width
+                wrapMode: Text.WordWrap
+                text: "AIR CURFEW IS IN EFFECT.\nHAULERS OVER 50000FT WILL BE TARGETED BY\nDEFENSE SYSTEMS."
+                color: config.MainColor
+                font.family: terminalFont.name
+            }
         }
+        
+        Item { Layout.fillHeight: true }
+    }
 
-        MouseArea {
-            anchors.fill: backgroundImage
-            onClicked: parent.forceActiveFocus()
-        }
+    // --- FOOTER ---
+    Text {
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottomMargin: 20
+        text: "(C) SM-LINK DATA SYSTEMS"
+        color: config.MainColor
+        font.family: terminalFont.name
+        opacity: 0.8
     }
 }
