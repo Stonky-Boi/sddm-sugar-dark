@@ -12,32 +12,40 @@ Column {
 
     // --- USERNAME ---
     RowLayout {
-        spacing: 10
+        spacing: 0 // Tight spacing for the bracket look
         Layout.fillWidth: true
 
         Text {
             text: "LOGIN:   "
-            color: "white" // Force White
+            color: "white" 
             font.family: root.font.family
             font.pointSize: root.font.pointSize
+            font.bold: true
+            Layout.rightMargin: 10
+        }
+
+        Text { 
+            text: "[" 
+            color: "white" 
+            font.family: root.font.family
+            font.pointSize: root.font.pointSize 
             font.bold: true
         }
 
-        Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
-
         TextField {
             id: username
-            Layout.preferredWidth: 300
+            Layout.preferredWidth: 250 // Fixed width for terminal look
+            Layout.fillWidth: false
             text: config.ForceLastUser == "true" ? userModel.lastUser : ""
-            font.capitalization: Font.Capitalize
+            
+            // REMOVED capitalization
             font.family: root.font.family
             font.pointSize: root.font.pointSize
             font.bold: true
             
-            // Text color inside the box
             color: "white" 
             
-            placeholderText: "IDENTITY"
+            placeholderText: "" // Removed placeholder to look cleaner
             horizontalAlignment: TextInput.AlignLeft
             background: Rectangle { color: "transparent" }
 
@@ -45,27 +53,41 @@ Column {
             KeyNavigation.down: password
         }
 
-        Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
+        Text { 
+            text: "]" 
+            color: "white" 
+            font.family: root.font.family
+            font.pointSize: root.font.pointSize 
+            font.bold: true
+        }
     }
 
     // --- PASSWORD ---
     RowLayout {
-        spacing: 10
+        spacing: 0
         Layout.fillWidth: true
 
         Text {
             text: "PASSWORD:"
-            color: "white" // Force White
+            color: "white" 
             font.family: root.font.family
             font.pointSize: root.font.pointSize
             font.bold: true
+            Layout.rightMargin: 10
         }
 
-        Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
+        Text { 
+            text: "[" 
+            color: "white" 
+            font.family: root.font.family
+            font.pointSize: root.font.pointSize 
+            font.bold: true
+        }
 
         TextField {
             id: password
-            Layout.preferredWidth: 300
+            Layout.preferredWidth: 250
+            Layout.fillWidth: false
             focus: config.ForcePasswordFocus == "true"
             echoMode: TextInput.Password
             passwordCharacter: "*"
@@ -73,7 +95,6 @@ Column {
             font.pointSize: root.font.pointSize
             font.bold: true
             
-            // Password dots should be white
             color: "white"
             
             horizontalAlignment: TextInput.AlignLeft
@@ -82,14 +103,20 @@ Column {
             Keys.onReturnPressed: loginButton.clicked()
         }
 
-        Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
+        Text { 
+            text: "]" 
+            color: "white" 
+            font.family: root.font.family
+            font.pointSize: root.font.pointSize 
+            font.bold: true
+        }
     }
 
     // --- ERROR MESSAGE ---
     Text {
         id: errorMessage
         text: failed ? config.TranslateLoginFailedWarning : ""
-        color: "#ff3333" // Bright Red for error
+        color: "#ff3333" 
         font.family: root.font.family
         font.bold: true
         font.pointSize: 16
