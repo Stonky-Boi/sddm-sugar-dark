@@ -98,6 +98,9 @@ Pane {
             id: systemButtons
             Layout.alignment: Qt.AlignLeft
             Layout.preferredHeight: 50
+            Layout.fillWidth: true
+            Layout.bottomMargin: 50 // Pulls buttons up from the edge
+            visible: true
         }
     }
 
