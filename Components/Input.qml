@@ -21,6 +21,7 @@ Column {
             Layout.rightMargin: 10
         }
         Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
+        
         ComboBox {
             id: username
             Layout.preferredWidth: 250
@@ -82,7 +83,7 @@ Column {
         Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
-    // --- NEW STACKED CONTROLS ---
+    // --- CONTROLS STACK ---
 
     // 1. Show Password
     RowLayout {
@@ -100,17 +101,7 @@ Column {
         }
     }
 
-    // 2. Session Switcher (Wayland/i3)
-    RowLayout {
-        Layout.topMargin: 0
-        Layout.leftMargin: 105 
-        SessionButton {
-            id: sessionSelect
-            textConstantSession: textConstants.session
-        }
-    }
-
-    // 3. Virtual Keyboard Toggle
+    // 2. Virtual Keyboard Toggle
     RowLayout {
         Layout.topMargin: 0
         Layout.leftMargin: 105 
@@ -127,6 +118,16 @@ Column {
             onClicked: {
                 virtualKeyboard.active = !virtualKeyboard.active
             }
+        }
+    }
+
+    // 3. Session Switcher
+    RowLayout {
+        Layout.topMargin: 0
+        Layout.leftMargin: 105 
+        SessionButton {
+            id: sessionSelect
+            textConstantSession: textConstants.session
         }
     }
 

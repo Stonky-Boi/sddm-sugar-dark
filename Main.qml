@@ -39,11 +39,10 @@ Pane {
         LoginForm {
             id: form
             Layout.fillWidth: true
-            // INCREASED HEIGHT to fit vertical buttons
-            Layout.preferredHeight: 350
+            // Increased to 380 to fit the 3-row stack safely
+            Layout.preferredHeight: 380
         }
 
-        // REDUCED SPACER (was 80) to balance the height increase above
         Item { height: 30; width: 1 } 
 
         Column {
@@ -134,13 +133,11 @@ Pane {
                 Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.top: parent.top; anchors.right: parent.right }
                 Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.bottom: parent.bottom; anchors.left: parent.left }
                 Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.bottom: parent.bottom; anchors.right: parent.right }
-
                 Image {
                     anchors.fill: parent; anchors.margins: 5
                     source: userModel.lastUser ? Qt.resolvedUrl(userModel.lastUser) : ""
                     fillMode: Image.PreserveAspectCrop
                 }
-                
                 Column {
                     anchors.fill: parent
                     Repeater {
