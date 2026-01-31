@@ -11,7 +11,7 @@ Column {
     property bool failed
     property alias sessionName: sessionSelect.currentSessionName
 
-    // --- USERNAME (Now a ComboBox for User Switching) ---
+    // --- USERNAME ---
     RowLayout {
         spacing: 0 
         Layout.fillWidth: true
@@ -22,7 +22,6 @@ Column {
         }
         Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
         
-        // This ComboBox works as a User Switcher
         ComboBox {
             id: username
             Layout.preferredWidth: 250
@@ -30,52 +29,31 @@ Column {
             model: userModel
             textRole: "name"
             currentIndex: model.lastIndex
-            
-            // Visual styling to match terminal look (Transparent)
             background: Rectangle { color: "transparent" }
             contentItem: Text {
                 text: parent.currentText
                 color: "white"
-                font.family: root.font.family
-                font.pointSize: root.font.pointSize
-                font.bold: true
+                font.family: root.font.family; font.pointSize: root.font.pointSize; font.bold: true
                 verticalAlignment: Text.AlignVCenter
             }
-            
-            // The Dropdown List Styling
             popup: Popup {
-                y: parent.height
-                width: parent.width
-                implicitHeight: contentItem.implicitHeight
-                padding: 1
+                y: parent.height; width: parent.width; implicitHeight: contentItem.implicitHeight; padding: 1
                 contentItem: ListView {
-                    clip: true
-                    implicitHeight: contentHeight
+                    clip: true; implicitHeight: contentHeight
                     model: username.popup.visible ? username.delegateModel : null
                     currentIndex: username.highlightedIndex
                 }
-                background: Rectangle {
-                    color: "black"
-                    border.color: "white"
-                    border.width: 1
-                }
+                background: Rectangle { color: "black"; border.color: "white"; border.width: 1 }
             }
-            
-            // Individual Items in the list
             delegate: ItemDelegate {
                 width: parent.width
                 contentItem: Text {
-                    text: model.name
-                    color: hovered ? "black" : "white"
-                    font.family: root.font.family
-                    font.bold: true
+                    text: model.name; color: hovered ? "black" : "white"
+                    font.family: root.font.family; font.bold: true
                 }
-                background: Rectangle {
-                    color: hovered ? "#33ff00" : "black"
-                }
+                background: Rectangle { color: hovered ? "#33ff00" : "black" }
             }
         }
-        
         Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
@@ -105,9 +83,9 @@ Column {
         Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
-    // --- CONTROLS ROW (Full Feature Set) ---
+    // --- CONTROLS ROW ---
     RowLayout {
-        spacing: 20
+        spacing: 15
         Layout.topMargin: 5
         Layout.leftMargin: 105 
 
@@ -117,50 +95,31 @@ Column {
             hoverEnabled: true
             indicator: Text {
                 text: parent.checked ? "[X] SHOW" : "[ ] SHOW"
-                font.family: root.font.family; font.pointSize: root.font.pointSize * 0.9; font.bold: true
+                font.family: root.font.family; font.pointSize: root.font.pointSize * 0.8; font.bold: true
                 color: parent.hovered ? "#33ff00" : "white" 
             }
             contentItem: Item {} 
         }
 
-        // 2. Session Select
+        // 2. Session Switcher (Wayland/i3)
         SessionButton {
             id: sessionSelect
             textConstantSession: textConstants.session
         }
 
-        // 3. Virtual Keyboard Toggle
+        // 3. Virtual Keyboard Toggle (Forced Visible)
         Button {
-            text: "[KEYBOARD]"
+            text: "[ KEYBOARD ]"
             hoverEnabled: true
-            visible: config.ForceHideVirtualKeyboardButton == "false"
+            visible: true // FORCED VISIBILITY
             background: Rectangle { color: "transparent" }
             contentItem: Text {
                 text: parent.text
-                font.family: root.font.family; font.pointSize: root.font.pointSize * 0.9; font.bold: true
+                font.family: root.font.family; font.pointSize: root.font.pointSize * 0.8; font.bold: true
                 color: parent.hovered ? "#33ff00" : "white"
             }
             onClicked: {
-                // Toggle the keyboard
                 virtualKeyboard.active = !virtualKeyboard.active
-            }
-        }
-        
-        // 4. Layout Switcher (Only shows if >1 layout)
-        Button {
-            text: "[LAYOUT]"
-            hoverEnabled: true
-            // Only visible if there are multiple layouts to switch between
-            visible: keyboard.layouts.length > 1
-            background: Rectangle { color: "transparent" }
-            contentItem: Text {
-                text: parent.text
-                font.family: root.font.family; font.pointSize: root.font.pointSize * 0.9; font.bold: true
-                color: parent.hovered ? "#33ff00" : "white"
-            }
-            onClicked: {
-                // Cycle through layouts
-                keyboard.currentLayout = (keyboard.currentLayout + 1) % keyboard.layouts.length
             }
         }
     }

@@ -20,75 +20,63 @@ Item {
         currentIndex: model.lastIndex
         textRole: "name"
 
+        // The Dropdown List Item
         delegate: ItemDelegate {
             width: parent.width
             anchors.horizontalCenter: parent.horizontalCenter
             contentItem: Text {
                 text: model.name
                 font.pointSize: root.font.pointSize * 0.8
-                color: selectSession.highlightedIndex === index ? "#444" : root.palette.highlight
+                // Highlight logic
+                color: selectSession.highlightedIndex === index ? "black" : "white"
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
+                font.family: root.font.family
+                font.bold: true
             }
             highlighted: parent.highlightedIndex === index
             background: Rectangle {
-                color: selectSession.highlightedIndex === index ? root.palette.highlight : "transparent"
+                color: selectSession.highlightedIndex === index ? "#33ff00" : "black"
             }
         }
 
         indicator: Item { visible: false }
 
+        // --- THE MAIN BUTTON LABEL ---
         contentItem: Text {
             id: displayedItem
-            text: (config.TranslateSession || (textConstantSession + ":")) + " " + selectSession.currentText
-            color: root.palette.text
+            // FORMAT: [ SESSION: HYPRLAND ]
+            text: "[ SESSION: " + (selectSession.currentText ? selectSession.currentText.toUpperCase() : "DEFAULT") + " ]"
+            
+            color: parent.hovered ? "#33ff00" : "white" // Green on hover
             verticalAlignment: Text.AlignVCenter
             anchors.left: parent.left
-            anchors.leftMargin: 3
             font.pointSize: root.font.pointSize * 0.8
+            font.family: root.font.family
+            font.bold: true
         }
 
         background: Rectangle {
             color: "transparent"
-            border.width: parent.visualFocus ? 1 : 0
-            border.color: "transparent"
-            height: parent.visualFocus ? 2 : 0
-            width: displayedItem.implicitWidth
-            anchors.top: parent.bottom
-            anchors.left: parent.left
-            anchors.leftMargin: 3
+            border.width: 0
         }
 
         popup: Popup {
-            id: popupHandler
-            y: parent.height - 1
-            rightMargin: config.ForceRightToLeft == "true" ? root.padding + sessionButton.width / 2 : undefined
-            width: sessionButton.width
+            y: parent.height
+            width: parent.width
             implicitHeight: contentItem.implicitHeight
-            padding: 10
-
+            padding: 1
             contentItem: ListView {
                 clip: true
-                implicitHeight: contentHeight + 20
+                implicitHeight: contentHeight
                 model: selectSession.popup.visible ? selectSession.delegateModel : null
                 currentIndex: selectSession.highlightedIndex
-                ScrollIndicator.vertical: ScrollIndicator { }
             }
             background: Rectangle {
-                radius: config.RoundCorners / 2
-                color: "#444"
-                layer.enabled: true
-                layer.effect: DropShadow {
-                    transparentBorder: true
-                    horizontalOffset: 0
-                    verticalOffset: 0
-                    radius: 100
-                    samples: 201
-                    cached: true
-                    color: "#88000000"
-                }
+                color: "black"
+                border.color: "white"
+                border.width: 1
             }
-            enter: Transition { NumberAnimation { property: "opacity"; from: 0; to: 1 } }
         }
     }
 }
