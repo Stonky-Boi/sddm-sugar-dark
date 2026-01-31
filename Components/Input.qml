@@ -21,7 +21,6 @@ Column {
             Layout.rightMargin: 10
         }
         Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
-        
         ComboBox {
             id: username
             Layout.preferredWidth: 250
@@ -83,13 +82,12 @@ Column {
         Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
-    // --- CONTROLS ROW ---
+    // --- NEW STACKED CONTROLS ---
+
+    // 1. Show Password
     RowLayout {
-        spacing: 15
         Layout.topMargin: 5
         Layout.leftMargin: 105 
-
-        // 1. Show Password
         CheckBox {
             id: revealSecret
             hoverEnabled: true
@@ -100,18 +98,26 @@ Column {
             }
             contentItem: Item {} 
         }
+    }
 
-        // 2. Session Switcher (Wayland/i3)
+    // 2. Session Switcher (Wayland/i3)
+    RowLayout {
+        Layout.topMargin: 0
+        Layout.leftMargin: 105 
         SessionButton {
             id: sessionSelect
             textConstantSession: textConstants.session
         }
+    }
 
-        // 3. Virtual Keyboard Toggle (Forced Visible)
+    // 3. Virtual Keyboard Toggle
+    RowLayout {
+        Layout.topMargin: 0
+        Layout.leftMargin: 105 
         Button {
             text: "[ KEYBOARD ]"
             hoverEnabled: true
-            visible: true // FORCED VISIBILITY
+            visible: true
             background: Rectangle { color: "transparent" }
             contentItem: Text {
                 text: parent.text

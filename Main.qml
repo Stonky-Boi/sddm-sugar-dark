@@ -39,10 +39,12 @@ Pane {
         LoginForm {
             id: form
             Layout.fillWidth: true
-            Layout.preferredHeight: 250
+            // INCREASED HEIGHT to fit vertical buttons
+            Layout.preferredHeight: 350
         }
 
-        Item { height: 80; width: 1 } 
+        // REDUCED SPACER (was 80) to balance the height increase above
+        Item { height: 30; width: 1 } 
 
         Column {
             spacing: 5
@@ -207,7 +209,6 @@ Pane {
         
         property bool active: item ? item.active : false
         
-        // Push the keyboard up from bottom
         anchors.fill: parent
         
         states: [
