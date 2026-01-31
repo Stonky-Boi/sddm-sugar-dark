@@ -34,7 +34,7 @@ Pane {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.leftMargin: config.ScreenPadding
-        anchors.topMargin: config.ScreenPadding
+        anchors.topMargin: 200
         
         spacing: 10
         width: parent.width * 0.45
