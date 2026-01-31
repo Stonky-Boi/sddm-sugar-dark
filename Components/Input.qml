@@ -11,11 +11,28 @@ Column {
     property bool failed
     property alias sessionName: sessionSelect.currentSessionName
 
-    // --- USERNAME (Layer 200 - Highest Priority) ---
+    // --- CURSOR COMPONENT ---
+    Component {
+        id: blockCursor
+        Rectangle {
+            width: 10 // Block width
+            height: parent.height
+            color: "#33ff00" // Green cursor
+            visible: parent.activeFocus
+            
+            // Blinking Animation
+            SequentialAnimation on opacity {
+                loops: Animation.Infinite
+                NumberAnimation { to: 0; duration: 500 }
+                NumberAnimation { to: 1; duration: 500 }
+            }
+        }
+    }
+
+    // --- USERNAME ---
     RowLayout {
         spacing: 0 
         Layout.fillWidth: true
-        // CRITICAL FIX: High Z-index ensures the dropdown covers everything below it
         z: 200 
         
         Text {
@@ -60,7 +77,7 @@ Column {
         Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
-    // --- PASSWORD (Layer 100) ---
+    // --- PASSWORD ---
     RowLayout {
         spacing: 0
         Layout.fillWidth: true
@@ -72,6 +89,7 @@ Column {
             Layout.rightMargin: 10
         }
         Text { text: "["; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
+        
         TextField {
             id: password
             Layout.preferredWidth: 250
@@ -83,18 +101,23 @@ Column {
             color: "white"
             horizontalAlignment: TextInput.AlignLeft
             background: Rectangle { color: "transparent" }
+            
+            // APPLYING THE CUSTOM CURSOR
+            cursorDelegate: blockCursor
+            
+            // Playing sound on key press (Basic implementation)
+            onTextEdited: {
+                if(root.soundKeypress) root.soundKeypress.play()
+            }
+
             Keys.onReturnPressed: loginButton.clicked()
         }
         Text { text: "]"; color: "white"; font.pointSize: root.font.pointSize; font.bold: true }
     }
 
-    // --- CONTROLS STACK (Layer 1) ---
-
-    // 1. Show Password
+    // --- CONTROLS STACK ---
     RowLayout {
-        Layout.topMargin: 5
-        Layout.leftMargin: 105 
-        z: 1
+        Layout.topMargin: 5; Layout.leftMargin: 105; z: 1
         CheckBox {
             id: revealSecret
             hoverEnabled: true
@@ -107,42 +130,29 @@ Column {
         }
     }
 
-    // 2. Virtual Keyboard Toggle
     RowLayout {
-        Layout.topMargin: 0
-        Layout.leftMargin: 105 
-        z: 1
+        Layout.topMargin: 0; Layout.leftMargin: 105; z: 1
         Button {
             text: "[ KEYBOARD ]"
-            hoverEnabled: true
-            visible: true
+            hoverEnabled: true; visible: true
             background: Rectangle { color: "transparent" }
             contentItem: Text {
                 text: parent.text
                 font.family: root.font.family; font.pointSize: root.font.pointSize * 0.8; font.bold: true
                 color: parent.hovered ? "#33ff00" : "white"
             }
-            onClicked: {
-                virtualKeyboard.active = !virtualKeyboard.active
-            }
+            onClicked: virtualKeyboard.active = !virtualKeyboard.active
         }
     }
 
-    // 3. Session Switcher
     RowLayout {
-        Layout.topMargin: 0
-        Layout.leftMargin: 105 
-        z: 1
-        
-        // Wrap in Item to ensure it takes proper space in the layout
+        Layout.topMargin: 0; Layout.leftMargin: 105; z: 1
         Item {
-            width: childrenRect.width
-            height: childrenRect.height
+            width: childrenRect.width; height: childrenRect.height
             SessionButton {
                 id: sessionSelect
                 textConstantSession: textConstants.session
                 anchors.left: parent.left
-                // Remove centering to respect the RowLayout
                 anchors.horizontalCenter: undefined 
             }
         }

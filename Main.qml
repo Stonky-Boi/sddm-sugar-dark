@@ -1,6 +1,7 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.4
+import QtMultimedia 5.8 // Required for Audio
 import "Components"
 
 Pane {
@@ -17,6 +18,12 @@ Pane {
     font.family: terminalFont.name
     font.pointSize: config.FontSize
 
+    // --- AUDIO SYSTEM ---
+    // Place .wav files in Assets/Sounds/ for this to work
+    SoundEffect { id: soundKeypress; source: "Assets/Sounds/keypress.mp3"; volume: 0.3 }
+    SoundEffect { id: soundAccessGranted; source: "Assets/Sounds/access_granted.mp3" }
+    SoundEffect { id: soundAccessDenied; source: "Assets/Sounds/access_denied.mp3" }
+
     Image {
         id: backgroundImage
         anchors.fill: parent
@@ -25,7 +32,7 @@ Pane {
         z: 0
     }
 
-    // --- LEFT COLUMN ---
+    // --- LEFT COLUMN (LOCKED) ---
     ColumnLayout {
         id: leftPanel
         anchors.left: parent.left
@@ -40,6 +47,9 @@ Pane {
             id: form
             Layout.fillWidth: true
             Layout.preferredHeight: 400
+            
+            // Pass audio signal down to inputs
+            property var soundEffect: soundKeypress 
         }
 
         Item { height: 30; width: 1 } 
@@ -69,7 +79,7 @@ Pane {
         }
     }
 
-    // --- RIGHT COLUMN ---
+    // --- RIGHT COLUMN (ENHANCED) ---
     ColumnLayout {
         id: rightPanel
         anchors.right: parent.right
@@ -85,30 +95,17 @@ Pane {
             Layout.alignment: Qt.AlignLeft
             spacing: 0
             
-            Text {
-                text: ">SYSTEM_TIME_REF:"
-                color: "#33ff00"
-                font.family: terminalFont.name
-                font.bold: true
-                font.pointSize: 14
-            }
+            Text { text: ">SYSTEM_TIME_REF:"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true; font.pointSize: 14 }
             Text {
                 id: timeDisplay
-                font.family: terminalFont.name
-                font.bold: true
-                font.pointSize: 64 
-                color: "white"
+                font.family: terminalFont.name; font.bold: true; font.pointSize: 64; color: "white"
                 function updateTime() { text = Qt.formatDateTime(new Date(), "HH:mm:ss") }
                 Timer { interval: 1000; running: true; repeat: true; onTriggered: parent.updateTime() }
                 Component.onCompleted: updateTime()
             }
             Text {
                 text: Qt.formatDateTime(new Date(), "dddd, dd-MM-yyyy").toUpperCase()
-                font.family: terminalFont.name
-                font.bold: true
-                font.pointSize: 18
-                color: "white"
-                opacity: 0.8
+                font.family: terminalFont.name; font.bold: true; font.pointSize: 18; color: "white"; opacity: 0.8
             }
         }
 
@@ -116,17 +113,9 @@ Pane {
         Column {
             spacing: 5
             Layout.alignment: Qt.AlignLeft
-            
-            Text {
-                text: ">BIOMETRIC_IDENTITY:"
-                color: "#33ff00"
-                font.family: terminalFont.name
-                font.bold: true
-            }
-            
+            Text { text: ">BIOMETRIC_IDENTITY:"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
             Item {
-                width: 150
-                height: 150
+                width: 150; height: 150
                 Rectangle { anchors.fill: parent; color: "transparent"; border.color: "white"; border.width: 2 }
                 Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.top: parent.top; anchors.left: parent.left }
                 Rectangle { width: 10; height: 10; color: "#33ff00"; anchors.top: parent.top; anchors.right: parent.right }
@@ -139,25 +128,53 @@ Pane {
                 }
                 Column {
                     anchors.fill: parent
-                    Repeater {
-                        model: 15
-                        Rectangle { width: parent.width; height: 1; color: "black"; opacity: 0.3; y: index * 10 }
-                    }
+                    Repeater { model: 15; Rectangle { width: parent.width; height: 1; color: "black"; opacity: 0.3; y: index * 10 } }
                 }
             }
         }
 
-        // 3. SYSTEM STATUS ARRAY
+        // 3. REACTOR STATUS (New)
+        Column {
+            spacing: 5
+            Layout.alignment: Qt.AlignLeft
+            Text { text: ">REACTOR_CORE_STATUS:"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
+            
+            // The Power Bar
+            Row {
+                spacing: 2
+                Repeater {
+                    model: 20
+                    Rectangle {
+                        width: 15; height: 25
+                        // Last few bars dim to simulate less than 100% or just fluctuation
+                        color: index < 18 ? "white" : "#444" 
+                    }
+                }
+            }
+            Text { text: "OUTPUT: NOMINAL [100%]"; color: "white"; font.family: terminalFont.name; font.bold: true }
+        }
+
+        // 4. COMMS UPLINK (New)
+        Column {
+            spacing: 5
+            Layout.alignment: Qt.AlignLeft
+            Text { text: ">COMMS_UPLINK_ARRAY:"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
+            
+            Text { text: "PRIORITY: 1"; color: "white"; font.family: terminalFont.name; font.bold: true }
+            Text { text: "ENCRYPTION: [ AES-256 ]"; color: "white"; font.family: terminalFont.name; font.bold: true }
+            RowLayout {
+                spacing: 10
+                Text { text: "SIGNAL_STRENGTH:"; color: "white"; font.family: terminalFont.name; font.bold: true }
+                Text { text: "|||||||||||| [-32dBm]"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
+            }
+        }
+
+        // 5. SYSTEM STATUS ARRAY
         Column {
             spacing: 15
             Layout.alignment: Qt.AlignLeft
             
-            Text { 
-                text: ">SYSTEM_STATUS_ARRAY:"
-                color: "#33ff00"
-                font.family: terminalFont.name
-                font.bold: true
-            }
+            Text { text: ">SYSTEM_STATUS_ARRAY:"; color: "#33ff00"; font.family: terminalFont.name; font.bold: true }
             RowLayout {
                 spacing: 10
                 Text { text: "HOST_NODE:"; color: "white"; font.family: terminalFont.name; font.bold: true }
@@ -184,7 +201,7 @@ Pane {
         Item { Layout.fillHeight: true }
     }
 
-    // --- FOOTER (Pinned) ---
+    // --- FOOTER ---
     Text {
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
@@ -196,32 +213,18 @@ Pane {
         opacity: 0.8
     }
 
-    // --- VIRTUAL KEYBOARD LOADER ---
+    // --- VIRTUAL KEYBOARD ---
     Loader {
         id: virtualKeyboard
         source: "Components/VirtualKeyboard.qml"
         state: "hidden"
-        z: 200 // Ensure it's on top
-        
+        z: 200 
         property bool active: item ? item.active : false
-        
         anchors.fill: parent
-        
         states: [
-            State {
-                name: "visible"
-                when: virtualKeyboard.active
-                PropertyChanges { target: virtualKeyboard; opacity: 1 }
-            },
-            State {
-                name: "hidden"
-                when: !virtualKeyboard.active
-                PropertyChanges { target: virtualKeyboard; opacity: 0 }
-            }
+            State { name: "visible"; when: virtualKeyboard.active; PropertyChanges { target: virtualKeyboard; opacity: 1 } },
+            State { name: "hidden"; when: !virtualKeyboard.active; PropertyChanges { target: virtualKeyboard; opacity: 0 } }
         ]
-        
-        transitions: Transition {
-            NumberAnimation { property: "opacity"; duration: 200 }
-        }
+        transitions: Transition { NumberAnimation { property: "opacity"; duration: 200 } }
     }
 }
