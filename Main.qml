@@ -40,7 +40,9 @@ Pane {
             id: form
             Layout.fillWidth: true
             Layout.preferredHeight: 400
-            keyboard: virtualKeyboard 
+            fontFamily: terminalFont.name
+            fontSize: config.FontSize
+            screenHeight: root.height 
         }
 
         Item { height: 30; width: 1 } 
@@ -67,8 +69,6 @@ Pane {
             Layout.fillWidth: true
             Layout.bottomMargin: 50 
             visible: true
-            
-            // Explicitly pass the font name
             fontFamily: terminalFont.name
         }
     }
@@ -224,14 +224,6 @@ Pane {
             }
             RowLayout {
                 spacing: 10
-                Text { text: "INPUT_NODE:"; color: "white"; font.family: terminalFont.name; font.bold: true }
-                Text { 
-                    text: keyboard.layouts && keyboard.layouts.length > 0 ? "[" + keyboard.layouts[keyboard.currentLayout].toString().toUpperCase() + "]" : "[STD_INPUT]"
-                    color: "white"; font.family: terminalFont.name; font.bold: true 
-                }
-            }
-            RowLayout {
-                spacing: 10
                 visible: keyboard.capsLock
                 Text { text: "SECURITY_ALERT:"; color: "red"; font.family: terminalFont.name; font.bold: true }
                 Text { text: "[CAPS_LOCK DETECTED]"; color: "red"; font.family: terminalFont.name; font.bold: true }
@@ -251,24 +243,5 @@ Pane {
         font.family: terminalFont.name
         font.bold: true
         opacity: 0.8
-    }
-
-    // --- VIRTUAL KEYBOARD ---
-    Loader {
-        id: virtualKeyboard
-        source: "Components/VirtualKeyboard.qml"
-        state: "hidden"
-        z: 200 
-        property bool active: item ? item.active : false
-        anchors.fill: parent
-        
-        property string fontFamily: terminalFont.name
-        onLoaded: item.fontFamily = terminalFont.name
-
-        states: [
-            State { name: "visible"; when: virtualKeyboard.active; PropertyChanges { target: virtualKeyboard; opacity: 1 } },
-            State { name: "hidden"; when: !virtualKeyboard.active; PropertyChanges { target: virtualKeyboard; opacity: 0 } }
-        ]
-        transitions: Transition { NumberAnimation { property: "opacity"; duration: 200 } }
     }
 }

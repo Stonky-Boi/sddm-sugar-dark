@@ -6,19 +6,17 @@ ColumnLayout {
     id: formContainer
     SDDM.TextConstants { id: textConstants }
 
-    // --- CRITICAL FIX: Accept the keyboard object from Main.qml ---
-    property var keyboard
-    
-    // Expose session name to Main.qml
     property alias currentSessionName: input.sessionName
+    property string fontFamily
+    property real fontSize
+    property real screenHeight
 
     Input {
         id: input
         Layout.alignment: Qt.AlignLeft
         Layout.preferredWidth: parent.width
-        Layout.preferredHeight: root.height / 10
-        
-        // --- CRITICAL FIX: Pass it to Input.qml ---
-        keyboard: formContainer.keyboard
+        Layout.preferredHeight: formContainer.screenHeight / 10
+        fontFamily: formContainer.fontFamily
+        fontSize: formContainer.fontSize
     }
 }
