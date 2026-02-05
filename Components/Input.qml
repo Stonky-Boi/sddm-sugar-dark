@@ -2,7 +2,7 @@ import QtQuick 2.11
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.4
 
-Column {
+ColumnLayout {
     id: inputContainer
     Layout.fillWidth: true
     spacing: 15
@@ -122,6 +122,7 @@ Column {
         }
     }
 
+    // --- SESSION SELECTOR ---
     RowLayout {
         Layout.topMargin: 0; Layout.leftMargin: 105; z: 1
         Item {

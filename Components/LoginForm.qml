@@ -15,7 +15,7 @@ ColumnLayout {
         id: input
         Layout.alignment: Qt.AlignLeft
         Layout.preferredWidth: parent.width
-        Layout.preferredHeight: formContainer.screenHeight / 10
+        Layout.fillHeight: true
         fontFamily: formContainer.fontFamily
         fontSize: formContainer.fontSize
     }
