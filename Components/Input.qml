@@ -122,8 +122,6 @@ Column {
         }
     }
 
-    // [KEYBOARD BUTTON REMOVED]
-
     RowLayout {
         Layout.topMargin: 0; Layout.leftMargin: 105; z: 1
         Item {

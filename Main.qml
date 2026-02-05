@@ -222,12 +222,6 @@ Pane {
                 Text { text: "TARGET_ENV:"; color: "white"; font.family: terminalFont.name; font.bold: true }
                 Text { text: "[" + (form.currentSessionName ? form.currentSessionName.toUpperCase() : "DEFAULT") + "]"; color: "white"; font.family: terminalFont.name; font.bold: true }
             }
-            RowLayout {
-                spacing: 10
-                visible: keyboard.capsLock
-                Text { text: "SECURITY_ALERT:"; color: "red"; font.family: terminalFont.name; font.bold: true }
-                Text { text: "[CAPS_LOCK DETECTED]"; color: "red"; font.family: terminalFont.name; font.bold: true }
-            }
         }
         
         Item { Layout.fillHeight: true }
