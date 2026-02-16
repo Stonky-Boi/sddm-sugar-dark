@@ -29,7 +29,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.leftMargin: 50
-        anchors.topMargin: 150 
+        anchors.topMargin: 200 
         spacing: 10
         width: parent.width * 0.45
 
@@ -63,7 +63,7 @@ Rectangle {
             Layout.alignment: Qt.AlignLeft
             Layout.preferredHeight: 50
             Layout.fillWidth: true
-            Layout.bottomMargin: 50 
+            Layout.bottomMargin: 100
             visible: true
             fontFamily: terminalFont.name
         }
