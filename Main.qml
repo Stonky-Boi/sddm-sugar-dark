@@ -17,12 +17,20 @@ Pane {
     font.family: terminalFont.name
     font.pointSize: config.FontSize
 
+    Rectangle {
+        anchors.fill: parent
+        color: "black"
+        z: -1
+    }
+
     Image {
         id: backgroundImage
         anchors.fill: parent
         source: config.Background
         fillMode: Image.PreserveAspectCrop
         z: 0
+        width: parent.width
+        height: parent.height
     }
 
     // --- LEFT COLUMN ---
