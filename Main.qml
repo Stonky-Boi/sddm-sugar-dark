@@ -3,25 +3,16 @@ import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.4
 import "Components"
 
-Pane {
+Rectangle {
     id: root
     height: config.ScreenHeight || Screen.height
     width: config.ScreenWidth || Screen.width
+    color: "black"
 
     FontLoader { id: terminalFont; source: "Assets/Fonts/ShareTechMono-Regular.ttf" }
 
-    palette.text: "white"
-    palette.buttonText: "white"
-    palette.window: "transparent"
-
-    font.family: terminalFont.name
-    font.pointSize: config.FontSize
-
-    Rectangle {
-        anchors.fill: parent
-        color: "black"
-        z: -1
-    }
+    property string fontFamily: terminalFont.name
+    property int fontSize: config.FontSize
 
     Image {
         id: backgroundImage
@@ -29,8 +20,6 @@ Pane {
         source: config.Background
         fillMode: Image.PreserveAspectCrop
         z: 0
-        width: parent.width
-        height: parent.height
     }
 
     // --- LEFT COLUMN ---
@@ -47,7 +36,6 @@ Pane {
         LoginForm {
             id: form
             Layout.fillWidth: true
-            Layout.preferredHeight: 400
             fontFamily: terminalFont.name
             fontSize: config.FontSize
             screenHeight: root.height 
